@@ -75,6 +75,7 @@
   <a class="nav-item" data-section="quintile" onclick="showSection('quintile')"><span class="nav-icon">📉</span> Quintile Returns</a>
   <a class="nav-item" data-section="correlation" onclick="showSection('correlation')"><span class="nav-icon">🔗</span> Correlations</a>
   <a class="nav-item" data-section="leverage" onclick="showSection('leverage')"><span class="nav-icon">⚡</span> Leverage &amp; Costs</a>
+  <a class="nav-item" data-section="signals" onclick="showSection('signals')"><span class="nav-icon">🎯</span> Live Signals</a>
 </nav>
 <main class="main">
   <section id="overview" class="section active">
@@ -163,6 +164,31 @@
         <div class="card-title">Year-by-Year Returns</div>
         <div class="tbl-wrap"><table><thead><tr><th>Year</th><th style="color:#7b82a0">Baseline</th><th style="color:#6c63ff">1x Uniform</th><th style="color:#00d4aa">Mixed 2x+1x</th></tr></thead><tbody id="lev-year-tbody"></tbody></table></div>
       </div>
+    </div>
+  </section>
+  <section id="signals" class="section">
+    <div class="page-title">Live Signals</div>
+    <div class="page-sub">Generated daily at 3:25 PM ET &bull; Enter at 3:30 PM ET same day &bull; Auto-refreshes from GitHub</div>
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+      <div class="kpi" style="--accent-color:#00d4aa"><div class="kpi-label">Signal Date</div><div class="kpi-value" style="font-size:18px" id="sig-date">—</div><div class="kpi-sub">Today's file</div></div>
+      <div class="kpi" style="--accent-color:#6c63ff"><div class="kpi-label">Regime</div><div class="kpi-value" style="font-size:18px" id="sig-regime">—</div><div class="kpi-sub">SPY trend</div></div>
+      <div class="kpi" style="--accent-color:#f0c040"><div class="kpi-label">SPY Close</div><div class="kpi-value" style="font-size:18px" id="sig-spy">—</div><div class="kpi-sub">At signal time</div></div>
+      <div class="kpi" style="--accent-color:#26de81"><div class="kpi-label">Signals</div><div class="kpi-value" style="font-size:18px" id="sig-count">—</div><div class="kpi-sub">Stocks to trade</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🎯 Today's Trade List <span class="badge" id="sig-badge">Loading…</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted)">Source: GitHub · <a id="sig-github-link" href="https://github.com/Skymatrixpartners/leader-score-v2-signals/tree/main/output/signals" target="_blank" style="color:var(--accent)">view repo</a></span>
+      </div>
+      <div id="sig-status" style="color:var(--muted);font-size:13px;padding:12px 0">Loading signals…</div>
+      <div class="tbl-wrap" id="sig-tbl-wrap" style="display:none">
+        <table><thead><tr>
+          <th>#</th><th>Ticker</th><th>Band</th><th>Score</th><th>Leverage</th><th>Price</th><th>Stop</th><th>Stop%</th><th>Sector</th>
+        </tr></thead><tbody id="sig-tbody"></tbody></table>
+      </div>
+    </div>
+    <div class="card" style="margin-top:0">
+      <div class="card-title">📅 Past Signals Archive</div>
+      <div id="sig-archive" style="color:var(--muted);font-size:13px">Loading…</div>
     </div>
   </section>
 </main>
@@ -385,6 +411,134 @@ function buildLeverage(){
 }
 loadAll().catch(err=>{
 document.getElementById('loader').innerHTML=`<div style="color:var(--red);text-align:center;max-width:440px;padding:30px"><div style="font-size:40px;margin-bottom:14px">⚠️</div><div style="font-size:16px;font-weight:700;margin-bottom:10px">Could not load CSV files</div><div style="font-size:13px;color:#7b82a0;line-height:1.8">Open this file from a local web server.<br><br>Run in the <strong>leader_score_v2</strong> folder:<br><code style="background:rgba(255,255,255,.08);padding:3px 8px;border-radius:4px;font-size:12px">python -m http.server 8080</code><br><br>Then open: <strong>http://localhost:8080/dashboard.html</strong></div><div style="margin-top:14px;font-size:10px;color:#7b82a0">${err}</div></div>`;});
+
+// ── Live Signals ──────────────────────────────────────────────────────────────
+const GITHUB_RAW = 'https://raw.githubusercontent.com/Skymatrixpartners/leader-score-v2-signals/main/output/signals';
+const GITHUB_API = 'https://api.github.com/repos/Skymatrixpartners/leader-score-v2-signals/contents/output/signals';
+
+async function loadSignals() {
+  // 1. List available signal files via GitHub API
+  let files = [];
+  try {
+    const r = await fetch(GITHUB_API);
+    if (r.ok) {
+      const items = await r.json();
+      files = items
+        .filter(f => f.name.startsWith('live_signals_') && f.name.endsWith('.csv'))
+        .map(f => f.name)
+        .sort()
+        .reverse(); // newest first
+    }
+  } catch(e) {}
+
+  // Populate archive list
+  const archiveEl = document.getElementById('sig-archive');
+  if (files.length > 0) {
+    archiveEl.innerHTML = files.map((f,i) => {
+      const d = f.replace('live_signals_','').replace('.csv','');
+      const url = `https://github.com/Skymatrixpartners/leader-score-v2-signals/blob/main/output/signals/${f}`;
+      return `<a href="${url}" target="_blank" style="display:inline-block;margin:4px 6px 4px 0;padding:4px 12px;background:rgba(108,99,255,${i===0?'.25':'.08'});border-radius:6px;color:${i===0?'var(--accent)':'var(--muted)'};font-size:12px;text-decoration:none;font-family:var(--mono,'JetBrains Mono')">${d}</a>`;
+    }).join('');
+  } else {
+    archiveEl.innerHTML = '<span style="color:var(--muted);font-size:12px">No signal files found in repo yet.</span>';
+  }
+
+  // 2. Load latest (today's or most recent) signal
+  const todayStr = new Date().toISOString().slice(0,10);
+  const targetFile = files.find(f => f.includes(todayStr)) || files[0];
+
+  if (!targetFile) {
+    document.getElementById('sig-status').textContent = 'No signal files available yet. Check back at 3:27 PM ET.';
+    document.getElementById('sig-badge').textContent = 'Not yet';
+    return;
+  }
+
+  const fileDate = targetFile.replace('live_signals_','').replace('.csv','');
+  document.getElementById('sig-date').textContent = fileDate;
+  document.getElementById('sig-github-link').href = `https://github.com/Skymatrixpartners/leader-score-v2-signals/tree/main/output/signals`;
+
+  let csv = '';
+  try {
+    // Use GitHub API to get file content (avoids CORS issues with raw)
+    const apiUrl = `https://api.github.com/repos/Skymatrixpartners/leader-score-v2-signals/contents/output/signals/${targetFile}`;
+    const r = await fetch(apiUrl);
+    if (r.ok) {
+      const meta = await r.json();
+      csv = atob(meta.content.replace(/\n/g,''));
+    }
+  } catch(e) {}
+
+  if (!csv) {
+    document.getElementById('sig-status').textContent = `Could not load ${targetFile}. It may still be generating.`;
+    document.getElementById('sig-badge').textContent = 'Error';
+    return;
+  }
+
+  const rows = parseCSV(csv);
+
+  if (rows.length === 0) {
+    const regime = 'BEAR';
+    document.getElementById('sig-regime').textContent = regime;
+    document.getElementById('sig-regime').style.color = 'var(--red)';
+    document.getElementById('sig-count').textContent = '0';
+    document.getElementById('sig-status').textContent = 'Regime: BEAR — no trades today.';
+    document.getElementById('sig-status').style.color = 'var(--red)';
+    document.getElementById('sig-badge').textContent = 'BEAR — No Trades';
+    return;
+  }
+
+  const r0 = rows[0];
+  const regime = r0.Regime || '—';
+  const spyClose = r0.SPY_Close ? '$' + parseFloat(r0.SPY_Close).toFixed(2) : '—';
+
+  document.getElementById('sig-regime').textContent = regime;
+  document.getElementById('sig-regime').style.color = regime==='BULL' ? 'var(--green)' : regime==='NEUTRAL' ? 'var(--gold)' : 'var(--red)';
+  document.getElementById('sig-spy').textContent = spyClose;
+  document.getElementById('sig-count').textContent = rows.length;
+  document.getElementById('sig-badge').textContent = `${rows.length} signal${rows.length!==1?'s':''} — ${regime}`;
+  document.getElementById('sig-status').style.display = 'none';
+  document.getElementById('sig-tbl-wrap').style.display = '';
+
+  document.getElementById('sig-tbody').innerHTML = rows.map((r, i) => {
+    const score = parseFloat(r.Leader_Score_V2 || r.Score || 0).toFixed(1);
+    const price = r.Close ? '$' + parseFloat(r.Close).toFixed(2) : '—';
+    const stop  = r.Stop_Price ? '$' + parseFloat(r.Stop_Price).toFixed(2) : '—';
+    const stopPct = r.Stop_Price && r.Close
+      ? ((parseFloat(r.Stop_Price) - parseFloat(r.Close)) / parseFloat(r.Close) * 100).toFixed(1) + '%'
+      : '—';
+    const band  = r.Band || '—';
+    const lev   = r.Leverage ? parseFloat(r.Leverage).toFixed(1) + 'x' : '—';
+    const bandColor = band === 'A' ? 'var(--accent)' : band === 'B' ? 'var(--accent2)' : 'var(--muted)';
+    const sector = (r.Sector||'').length > 25 ? (r.Sector||'').slice(0,25)+'…' : (r.Sector||'—');
+    return `<tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td style="font-weight:700;color:var(--text)">${r.Ticker||'—'}</td>
+      <td><span style="background:rgba(${band==='A'?'108,99,255':'0,212,170'},.2);color:${bandColor};padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700">Band ${band}</span></td>
+      <td style="color:var(--gold);font-weight:700">${score}</td>
+      <td style="color:${lev==='2.0x'?'var(--accent)':'var(--accent2)'}">${lev}</td>
+      <td>${price}</td>
+      <td style="color:var(--red)">${stop}</td>
+      <td style="color:var(--red)">${stopPct}</td>
+      <td style="color:var(--muted);font-size:11px">${sector}</td>
+    </tr>`;
+  }).join('');
+
+  // Update entry instructions banner
+  const now = new Date();
+  const etOffset = -4; // EDT; adjust -5 for EST
+  const etHour = (now.getUTCHours() + etOffset + 24) % 24;
+  const isTradeWindow = etHour >= 15 && etHour < 16;
+  if (isTradeWindow) {
+    document.getElementById('sig-badge').textContent += ' ← ENTER NOW (3:30 PM ET window)';
+    document.getElementById('sig-badge').style.background = 'rgba(38,222,129,.25)';
+    document.getElementById('sig-badge').style.color = 'var(--green)';
+  }
+}
+
+loadSignals().catch(e => {
+  document.getElementById('sig-status').textContent = 'Failed to load signals: ' + e.message;
+  document.getElementById('sig-badge').textContent = 'Error';
+});
 </script>
 </body>
 </html>
