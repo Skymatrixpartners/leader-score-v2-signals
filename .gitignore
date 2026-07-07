@@ -17,10 +17,12 @@ env/
 
 # Large data files — keep locally only
 data/minute_csv*/
+*.xlsx
 
 # output/signals are committed to repo for easy access
 # output/signals/*.csv
 # output/signals/*.json
+# output/backtest/ and output/research/ are committed for GitHub Pages dashboard
 
 # OS
 .DS_Store
