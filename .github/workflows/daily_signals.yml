@@ -36,8 +36,8 @@ jobs:
 
       - name: Generate signals
         env:
-          MASSIVE_API_KEY: ${{ lYkOOYWztfYCJPLEesOHfn_jR3XAxG9K }}
-          MASSIVE_API_URL: ${{ https://api.massive.com/v2 }}
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+          MASSIVE_API_URL: https://api.massive.com/v2
         run: |
           cd trail_live
           if [ -n "${{ github.event.inputs.date }}" ]; then
