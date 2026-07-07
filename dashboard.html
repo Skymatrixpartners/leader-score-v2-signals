@@ -168,15 +168,15 @@
   </section>
   <section id="signals" class="section">
     <div class="page-title">Live Signals</div>
-    <div class="page-sub">Generated daily at 3:25 PM ET &bull; Enter at 3:30 PM ET same day &bull; Auto-refreshes from GitHub</div>
+    <div class="page-sub">EOD watchlist generated at 3:25 PM ET &bull; <strong style="color:var(--gold)">Candidates only — not yet intraday-validated</strong> &bull; Entry requires next-morning confirmation: gap direction + ORB/VWAP break + Live Entry Score &ge; 75</div>
     <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
       <div class="kpi" style="--accent-color:#00d4aa"><div class="kpi-label">Signal Date</div><div class="kpi-value" style="font-size:18px" id="sig-date">—</div><div class="kpi-sub">Today's file</div></div>
       <div class="kpi" style="--accent-color:#6c63ff"><div class="kpi-label">Regime</div><div class="kpi-value" style="font-size:18px" id="sig-regime">—</div><div class="kpi-sub">SPY trend</div></div>
       <div class="kpi" style="--accent-color:#f0c040"><div class="kpi-label">SPY Close</div><div class="kpi-value" style="font-size:18px" id="sig-spy">—</div><div class="kpi-sub">At signal time</div></div>
-      <div class="kpi" style="--accent-color:#26de81"><div class="kpi-label">Signals</div><div class="kpi-value" style="font-size:18px" id="sig-count">—</div><div class="kpi-sub">Stocks to trade</div></div>
+      <div class="kpi" style="--accent-color:#26de81"><div class="kpi-label">Candidates</div><div class="kpi-value" style="font-size:18px" id="sig-count">—</div><div class="kpi-sub">Needs intraday confirm</div></div>
     </div>
     <div class="card">
-      <div class="card-title">🎯 Today's Trade List <span class="badge" id="sig-badge">Loading…</span>
+      <div class="card-title">📋 Pre-Market Watchlist <span class="badge" id="sig-badge">Loading…</span>
         <span style="margin-left:auto;font-size:11px;color:var(--muted)">Source: GitHub · <a id="sig-github-link" href="https://github.com/Skymatrixpartners/leader-score-v2-signals/tree/main/output/signals" target="_blank" style="color:var(--accent)">view repo</a></span>
       </div>
       <div id="sig-status" style="color:var(--muted);font-size:13px;padding:12px 0">Loading signals…</div>
