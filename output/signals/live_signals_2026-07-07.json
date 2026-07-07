@@ -54,6 +54,42 @@
       "Close": 218.4,
       "ATR20": 5.758115000000001,
       "Sector": "Healthcare"
+    },
+    {
+      "Ticker": "CLVT",
+      "Band": "A",
+      "Leader_Score_V2": 93.57788944723619,
+      "Leverage": 2.0,
+      "Close": 2.44,
+      "ATR20": 0.15375000000000005,
+      "Sector": "SERVICES-COMPUTER PROCESSING & DATA PREPARATION"
+    },
+    {
+      "Ticker": "CERT",
+      "Band": "A",
+      "Leader_Score_V2": 93.46733668341709,
+      "Leverage": 2.0,
+      "Close": 7.13,
+      "ATR20": 0.40184,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "RBRK",
+      "Band": "A",
+      "Leader_Score_V2": 92.72361809045225,
+      "Leverage": 2.0,
+      "Close": 87.36,
+      "ATR20": 4.433445,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "TRU",
+      "Band": "A",
+      "Leader_Score_V2": 92.4170854271357,
+      "Leverage": 2.0,
+      "Close": 79.28,
+      "ATR20": 2.7972500000000005,
+      "Sector": "SERVICES-CONSUMER CREDIT REPORTING, COLLECTION AGENCIES"
     }
   ]
 }
