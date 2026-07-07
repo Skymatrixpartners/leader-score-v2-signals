@@ -1,0 +1,95 @@
+{
+  "date": "2026-07-07",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 751.28,
+    "sma50": 738.23,
+    "sma200": 692.74,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "MRNA",
+      "Band": "B",
+      "Leader_Score_V2": 99.15075376884423,
+      "Leverage": 1.0,
+      "Close": 81.8,
+      "ATR20": 5.146395,
+      "Sector": "BIOLOGICAL PRODUCTS, (NO DIAGNOSTIC SUBSTANCES)"
+    },
+    {
+      "Ticker": "GPC",
+      "Band": "A",
+      "Leader_Score_V2": 94.83417085427136,
+      "Leverage": 2.0,
+      "Close": 128.66,
+      "ATR20": 4.211745,
+      "Sector": "WHOLESALE-MOTOR VEHICLE SUPPLIES & NEW PARTS"
+    },
+    {
+      "Ticker": "RDDT",
+      "Band": "A",
+      "Leader_Score_V2": 94.57286432160805,
+      "Leverage": 2.0,
+      "Close": 200.86,
+      "ATR20": 12.55241,
+      "Sector": "SERVICES-COMPUTER PROCESSING & DATA PREPARATION"
+    },
+    {
+      "Ticker": "PATH",
+      "Band": "A",
+      "Leader_Score_V2": 93.68341708542714,
+      "Leverage": 2.0,
+      "Close": 11.83,
+      "ATR20": 0.5934899999999999,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "RMD",
+      "Band": "A",
+      "Leader_Score_V2": 93.63819095477388,
+      "Leverage": 2.0,
+      "Close": 218.4,
+      "ATR20": 5.758115000000001,
+      "Sector": "Healthcare"
+    },
+    {
+      "Ticker": "CLVT",
+      "Band": "A",
+      "Leader_Score_V2": 93.57788944723619,
+      "Leverage": 2.0,
+      "Close": 2.44,
+      "ATR20": 0.15375000000000005,
+      "Sector": "SERVICES-COMPUTER PROCESSING & DATA PREPARATION"
+    },
+    {
+      "Ticker": "CERT",
+      "Band": "A",
+      "Leader_Score_V2": 93.46733668341709,
+      "Leverage": 2.0,
+      "Close": 7.13,
+      "ATR20": 0.40184,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "RBRK",
+      "Band": "A",
+      "Leader_Score_V2": 92.72361809045225,
+      "Leverage": 2.0,
+      "Close": 87.36,
+      "ATR20": 4.433445,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "TRU",
+      "Band": "A",
+      "Leader_Score_V2": 92.4170854271357,
+      "Leverage": 2.0,
+      "Close": 79.28,
+      "ATR20": 2.7972500000000005,
+      "Sector": "SERVICES-CONSUMER CREDIT REPORTING, COLLECTION AGENCIES"
+    }
+  ]
+}
