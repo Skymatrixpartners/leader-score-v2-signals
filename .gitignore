@@ -1,0 +1,25 @@
+# Secrets — never commit these
+.env
+*.env
+secrets.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Large data files — keep locally only
+data/minute_csv*/
+output/signals/*.csv
+output/signals/*.json
+
+# OS
+.DS_Store
+Thumbs.db

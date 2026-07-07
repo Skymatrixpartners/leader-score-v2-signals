@@ -1,0 +1,77 @@
+name: Daily Live Signals
+
+on:
+  # 3:25 PM ET = 20:25 UTC (Nov-Mar, EST)
+  # 3:25 PM ET = 19:25 UTC (Mar-Nov, EDT)
+  # Run both to cover DST transitions — script is idempotent
+  schedule:
+    - cron: '25 19 * * 1-5'   # 3:25 PM EDT (summer)
+    - cron: '25 20 * * 1-5'   # 3:25 PM EST (winter)
+  workflow_dispatch:            # allow manual trigger from GitHub UI
+    inputs:
+      date:
+        description: 'Signal date (YYYY-MM-DD), leave blank for today'
+        required: false
+        default: ''
+
+jobs:
+  generate-signals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r trail_live/requirements.txt
+
+      - name: Generate signals
+        env:
+          MASSIVE_API_KEY: ${{ lYkOOYWztfYCJPLEesOHfn_jR3XAxG9K }}
+          MASSIVE_API_URL: ${{ https://api.massive.com/v2 }}
+        run: |
+          cd trail_live
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            python live_signal_generator.py --date "${{ github.event.inputs.date }}"
+          else
+            python live_signal_generator.py
+          fi
+
+      - name: Upload signals as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-signals-${{ github.run_id }}
+          path: trail_live/output/signals/
+          retention-days: 90
+
+      # Optional: commit signals back to repo (remove if not wanted)
+      - name: Commit signals to repo
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add trail_live/output/signals/ || true
+          git diff --cached --quiet || git commit -m "signals: $(date -u '+%Y-%m-%d')"
+          git push || true
+
+      # Optional: send webhook (Discord, Slack, etc.) — uncomment and configure
+      # - name: Send Discord notification
+      #   if: success()
+      #   env:
+      #     DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      #   run: |
+      #     SIGNALS=$(cat trail_live/output/signals/live_signals_$(date +%Y-%m-%d).json 2>/dev/null || echo '{"signals":[]}')
+      #     COUNT=$(echo $SIGNALS | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d['signals']))")
+      #     REGIME=$(echo $SIGNALS | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['regime'])")
+      #     curl -s -X POST "$DISCORD_WEBHOOK" \
+      #       -H "Content-Type: application/json" \
+      #       -d "{\"content\": \"**Leader Score V2 Signals — $(date +%Y-%m-%d)**\\nRegime: $REGIME\\nSignals: $COUNT\"}"

@@ -1,0 +1,24 @@
+LARGE DATA FILES (not included — must be available on the run server)
+====================================================================
+
+1. scored_dataset_10y.csv
+   Source: C:\Users\Kush Shah\Desktop\backtest\leader_score_v2\output\scored_dataset_10y.csv
+   Size  : ~300 MB  |  1,689,003 rows
+   Copy to: trail_live/output/scored_dataset_10y.csv
+
+2. minute_csv_10y_all1000/ (885 CSV files, ~60-120 MB each)
+   Source: C:\Users\Kush Shah\Desktop\backtest\leader_score_v2\data\minute_csv_10y_all1000
+   Copy to: trail_live/data/minute_csv_10y_all1000/
+
+NOTES
+-----
+- To run realistic_backtest_10y.py ONLY: only combined_trades_10y.csv is needed (already included).
+- To re-run combined_backtest_10y.py (regenerate trades): need scored_dataset + minute_csv_10y_all1000.
+- Dashboard: serve trail_live/ with any HTTP server (e.g. python -m http.server 8080).
+
+RUN ORDER
+---------
+  1. python backtest/combined_backtest_10y.py      # regenerate raw trades (optional)
+  2. python backtest/realistic_backtest_10y.py     # strategy sim -> Excel + CSVs
+  3. python -m http.server 8080                    # serve dashboard
+     open http://localhost:8080/dashboard.html

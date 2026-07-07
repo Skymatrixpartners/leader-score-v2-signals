@@ -1,0 +1,95 @@
+LEADER SCORE V2 - LIVE SIGNAL STRATEGY SPECIFICATION
+=====================================================
+Locked: 2026-07-06
+
+PIPELINE (run in order)
+-----------------------
+Step 1: build_research_dataset.py
+  - Downloads daily OHLCV for all Russell 1000 tickers
+  - Computes: RS2, RS3, RS5, RS10 (relative strength vs universe)
+  - Computes: RVOL (today vol / 20-day avg vol)
+  - Computes: ATR20, DollarVolume, SPY_Close, SPY_SMA50, SPY_SMA200, SPY_Bull
+  - Output: output/research_dataset.csv
+
+Step 2: score_research_dataset.py
+  - Cross-sectional percentile ranking per day across universe
+  - Composite score formula:
+      Raw_Score = RS10_Pct*0.45 + RS5_Pct*0.25 + RVOL_Pct*0.20
+                  + RS3_Pct*0.05 + DollarVolume_Pct*0.05
+  - Output: output/scored_dataset_10y.csv
+
+Step 3: [LIVE SIGNAL GENERATOR - to be built]
+  - Run daily at ~3:25 PM ET
+  - Read today's scored_dataset row for each ticker
+  - Apply REGIME + SCORE filters (see below)
+  - Output: BUY signals with entry price = 3:30 PM ET close
+
+REGIME FILTER
+-------------
+  Bull         : SPY_Bull == True                    -> trade, min score 80
+  Neutral_Above: SPY >= SMA50 (not Bull)             -> trade, min score 85
+  Neutral_Below: SPY < SMA50 AND SPY >= SMA200       -> trade, min score 85
+  BEAR (SIT OUT): SPY < SMA200                       -> NO TRADES
+
+SCORE FILTER & BANDS
+--------------------
+  Band A: Raw_Score 92.0 to 95.0  -> BUY at 2x leverage
+  Band B: Raw_Score 98.0 to 100.0 -> BUY at 1x leverage
+  Dead zone 95-98                 -> SKIP
+  Take TOP 10 stocks by score across both bands combined
+
+ENTRY
+-----
+  Time : 3:30 PM ET (enter in last 30 min of regular session)
+  Price: Market order or limit near 3:30 PM bar close
+  Size : equal_weight = portfolio_value / N_stocks_today
+         Band A position = equal_weight * 2.0
+         Band B position = equal_weight * 1.0
+
+TRAILING STOP LOSS
+------------------
+  Initial stop = entry_price - (2.0 * ATR20)
+  Each day during hold:
+    1. If today LOW <= current_stop  -> EXIT at current_stop
+    2. If today HIGH > highest_seen:
+         highest_seen = today HIGH
+         new_stop = highest_seen - (2.0 * ATR20)
+         current_stop = max(current_stop, new_stop)   [ratchet up only]
+
+EXIT
+----
+  A) Trailing stop triggered -> exit at stop price (same day)
+  B) Day 5 after entry       -> exit at market close
+  No profit target.
+
+COSTS (IBKR Pro)
+----------------
+  Commission: $0.005/share, min $1.00 per order (both entry and exit)
+  Spread    : $0.01/share large-cap (Russell 1000)
+
+BACKTEST RESULTS (10Y 2016-2026, $100K start)
+----------------------------------------------
+  1x Uniform : CAGR +66.1%  MaxDD -32.7%  Calmar 2.01  Final $12.8M
+  Mixed 2x+1x: CAGR +105.7% MaxDD -53.9%  Calmar 1.96  Final $101.7M
+  Win Rate: 50.9%  R/R: 1.56  Stops Hit: 37.5%  Trades: 1,616
+
+DATA REQUIREMENTS FOR LIVE
+---------------------------
+  - Daily OHLCV for ~1000 Russell 1000 tickers (end of day)
+  - Intraday 1-min bars for 3:30 PM ET entry price
+  - SPY daily OHLCV (SMA50, SMA200, Bull regime)
+  - ATR20 per ticker (20-day rolling from daily bars)
+
+FOLDER STRUCTURE
+----------------
+  trail_live/
+    build_research_dataset.py    <- Step 1: fetch data + features
+    score_research_dataset.py    <- Step 2: score stocks
+    features/                    <- feature calculation modules
+    models/                      <- Leader Score V2 model
+    backtest/
+      combined_backtest_10y.py   <- Step 3: backtest engine (reference)
+      realistic_backtest_10y.py  <- Step 4: strategy simulator (reference)
+    output/backtest/             <- current results (CSVs + Excel)
+    dashboard.html               <- research dashboard
+    STRATEGY_SPEC.txt            <- this file
