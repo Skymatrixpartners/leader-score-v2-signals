@@ -17,8 +17,10 @@ env/
 
 # Large data files — keep locally only
 data/minute_csv*/
-output/signals/*.csv
-output/signals/*.json
+
+# output/signals are committed to repo for easy access
+# output/signals/*.csv
+# output/signals/*.json
 
 # OS
 .DS_Store
