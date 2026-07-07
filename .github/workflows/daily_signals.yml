@@ -32,14 +32,13 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r trail_live/requirements.txt
+          pip install -r requirements.txt
 
       - name: Generate signals
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_API_URL: https://api.massive.com/v2
         run: |
-          cd trail_live
           if [ -n "${{ github.event.inputs.date }}" ]; then
             python live_signal_generator.py --date "${{ github.event.inputs.date }}"
           else
@@ -50,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: live-signals-${{ github.run_id }}
-          path: trail_live/output/signals/
+          path: output/signals/
           retention-days: 90
 
       # Optional: commit signals back to repo (remove if not wanted)
@@ -59,7 +58,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add trail_live/output/signals/ || true
+          git add output/signals/ || true
           git diff --cached --quiet || git commit -m "signals: $(date -u '+%Y-%m-%d')"
           git push || true
 
