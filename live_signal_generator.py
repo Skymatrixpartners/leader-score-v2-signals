@@ -58,13 +58,12 @@ SPY_LOOKBACK   = 310   # fetch 310 calendar days for SPY -> covers SMA50 + SMA20
 RATE_LIMIT     = 0.12  # seconds between API calls
 MAX_WORKERS    = 8
 
-# Score bands (sweep-validated)
-BAND_D_LO, BAND_D_HI = 80.0,  84.0   # 1x  — momentum base zone (no leverage)
-BAND_A_LO, BAND_A_HI = 90.0,  95.0   # 2x  — high-conviction zone
+# Score bands (backtest-validated)
+BAND_A_LO, BAND_A_HI = 92.0,  95.0   # 2x  — high-conviction zone
 BAND_B_LO, BAND_B_HI = 98.0, 100.0   # 1x  — moonshots (no leverage)
 # Regime minimum scores
-REGIME_BULL_MIN       = 80.0
-REGIME_NEUTRAL_MIN    = 85.0
+REGIME_BULL_MIN       = 92.0
+REGIME_NEUTRAL_MIN    = 92.0
 
 # Score weights (IC-validated, must sum to 1.0)
 WEIGHTS = {
@@ -249,15 +248,7 @@ def apply_filters(df: pd.DataFrame, regime: str, top_n: int) -> pd.DataFrame:
 
     min_score = REGIME_BULL_MIN if regime == "BULL" else REGIME_NEUTRAL_MIN
 
-    # Band D: score 80-84 → 1x (no leverage)
-    band_d = df[
-        (df["Leader_Score_V2"] >= max(BAND_D_LO, min_score)) &
-        (df["Leader_Score_V2"] <= BAND_D_HI)
-    ].copy()
-    band_d["Band"]     = "D"
-    band_d["Leverage"] = 1.0
-
-    # Band A: score 90-95 → 2x leverage (high-conviction zone)
+    # Band A: score 92-95 → 2x leverage (high-conviction zone)
     band_a = df[
         (df["Leader_Score_V2"] >= max(BAND_A_LO, min_score)) &
         (df["Leader_Score_V2"] <= BAND_A_HI)
@@ -273,7 +264,7 @@ def apply_filters(df: pd.DataFrame, regime: str, top_n: int) -> pd.DataFrame:
     band_b["Band"]     = "B"
     band_b["Leverage"] = 1.0
 
-    combined = pd.concat([band_d, band_a, band_b], ignore_index=True)
+    combined = pd.concat([band_a, band_b], ignore_index=True)
     if combined.empty:
         print("  No stocks pass band filter today.")
         return pd.DataFrame()
