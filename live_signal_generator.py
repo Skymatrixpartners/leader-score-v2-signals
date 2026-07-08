@@ -59,10 +59,9 @@ RATE_LIMIT     = 0.12  # seconds between API calls
 MAX_WORKERS    = 8
 
 # Score bands (sweep-validated)
-BAND_D_LO, BAND_D_HI = 80.0,  84.0   # 1x  — momentum base zone
-BAND_C_LO, BAND_C_HI = 90.0,  91.0   # 1.5x — high-sharpe zone (Sharpe 1.25)
-BAND_A_LO, BAND_A_HI = 92.0,  95.0   # 2x  — golden zone
-BAND_B_LO, BAND_B_HI = 98.0, 100.0   # 1x  — moonshots
+BAND_D_LO, BAND_D_HI = 80.0,  84.0   # 1x  — momentum base zone (no leverage)
+BAND_A_LO, BAND_A_HI = 90.0,  95.0   # 2x  — high-conviction zone
+BAND_B_LO, BAND_B_HI = 98.0, 100.0   # 1x  — moonshots (no leverage)
 # Regime minimum scores
 REGIME_BULL_MIN       = 80.0
 REGIME_NEUTRAL_MIN    = 85.0
@@ -250,7 +249,7 @@ def apply_filters(df: pd.DataFrame, regime: str, top_n: int) -> pd.DataFrame:
 
     min_score = REGIME_BULL_MIN if regime == "BULL" else REGIME_NEUTRAL_MIN
 
-    # Band D: score 80-84 → 1x leverage (momentum base zone, no leverage)
+    # Band D: score 80-84 → 1x (no leverage)
     band_d = df[
         (df["Leader_Score_V2"] >= max(BAND_D_LO, min_score)) &
         (df["Leader_Score_V2"] <= BAND_D_HI)
@@ -258,15 +257,7 @@ def apply_filters(df: pd.DataFrame, regime: str, top_n: int) -> pd.DataFrame:
     band_d["Band"]     = "D"
     band_d["Leverage"] = 1.0
 
-    # Band C: score 90-91 → 1.5x leverage (high-Sharpe zone)
-    band_c = df[
-        (df["Leader_Score_V2"] >= max(BAND_C_LO, min_score)) &
-        (df["Leader_Score_V2"] <= BAND_C_HI)
-    ].copy()
-    band_c["Band"]     = "C"
-    band_c["Leverage"] = 1.5
-
-    # Band A: score 92-95 → 2x leverage (golden zone)
+    # Band A: score 90-95 → 2x leverage (high-conviction zone)
     band_a = df[
         (df["Leader_Score_V2"] >= max(BAND_A_LO, min_score)) &
         (df["Leader_Score_V2"] <= BAND_A_HI)
@@ -274,7 +265,7 @@ def apply_filters(df: pd.DataFrame, regime: str, top_n: int) -> pd.DataFrame:
     band_a["Band"]     = "A"
     band_a["Leverage"] = 2.0
 
-    # Band B: score 98-100 → 1x leverage (moonshots)
+    # Band B: score 98-100 → 1x (no leverage, moonshots)
     band_b = df[
         (df["Leader_Score_V2"] >= max(BAND_B_LO, min_score)) &
         (df["Leader_Score_V2"] <= BAND_B_HI)
@@ -282,7 +273,7 @@ def apply_filters(df: pd.DataFrame, regime: str, top_n: int) -> pd.DataFrame:
     band_b["Band"]     = "B"
     band_b["Leverage"] = 1.0
 
-    combined = pd.concat([band_d, band_c, band_a, band_b], ignore_index=True)
+    combined = pd.concat([band_d, band_a, band_b], ignore_index=True)
     if combined.empty:
         print("  No stocks pass band filter today.")
         return pd.DataFrame()
