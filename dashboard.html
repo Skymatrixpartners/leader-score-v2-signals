@@ -75,6 +75,7 @@
   <a class="nav-item" data-section="quintile" onclick="showSection('quintile')"><span class="nav-icon">📉</span> Quintile Returns</a>
   <a class="nav-item" data-section="correlation" onclick="showSection('correlation')"><span class="nav-icon">🔗</span> Correlations</a>
   <a class="nav-item" data-section="leverage" onclick="showSection('leverage')"><span class="nav-icon">⚡</span> Leverage &amp; Costs</a>
+  <a class="nav-item" data-section="experiment" onclick="showSection('experiment')"><span class="nav-icon">⚗</span> Experiments</a>
   <a class="nav-item" data-section="signals" onclick="showSection('signals')"><span class="nav-icon">🎯</span> Live Signals</a>
 </nav>
 <main class="main">
@@ -163,6 +164,59 @@
       <div class="card">
         <div class="card-title">Year-by-Year Returns</div>
         <div class="tbl-wrap"><table><thead><tr><th>Year</th><th style="color:#7b82a0">Baseline</th><th style="color:#6c63ff">1x Uniform</th><th style="color:#00d4aa">Mixed 2x+1x</th></tr></thead><tbody id="lev-year-tbody"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+  <section id="experiment" class="section">
+    <div class="page-title">Band Experiment <span style="font-size:13px;color:var(--gold);font-weight:500;margin-left:10px">⚗ NOT LOCKED — Research Only</span></div>
+    <div class="page-sub">Testing 3-band structure vs original · 5D hold · ATR 2× stop · Top-10 · 10-year dataset</div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-title">Scenario Comparison</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Scenario</th><th>Trades</th><th>Avg Lev</th><th>CAGR</th><th>Alpha</th><th>Sharpe</th><th>Max DD</th><th>Win %</th></tr></thead>
+        <tbody>
+          <tr style="background:#0d1f0d">
+            <td style="color:#26de81;font-weight:600">Old — 92-95 (2x) | 98-100 (1x)</td>
+            <td>2,311</td><td>1.81x</td>
+            <td style="color:#26de81">+46.4%</td><td style="color:#26de81">+36.9%</td>
+            <td style="color:#26de81">1.31</td><td style="color:#fc5c65">-48.4%</td><td>52.1%</td>
+          </tr>
+          <tr style="background:#1a2035">
+            <td style="color:#f0c040;font-weight:600">New — 80-84 (1x) | 90-95 (2x) | 98-100 (1x)</td>
+            <td>3,368</td><td>1.78x</td>
+            <td style="color:#f0c040">+33.0%</td><td style="color:#f0c040">+22.3%</td>
+            <td style="color:#fc5c65">1.15</td><td style="color:#fc5c65;font-weight:700">-91.6% ⚠</td><td>52.4%</td>
+          </tr>
+          <tr style="background:#131929">
+            <td style="color:#7b82a0">New — no leverage (all 1x)</td>
+            <td>3,368</td><td>1.00x</td>
+            <td>+29.3%</td><td>+18.6%</td>
+            <td>1.23</td><td style="color:#fc5c65">-53.5%</td><td>52.4%</td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Band-by-Band Breakdown — New Structure</div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Band</th><th>Score Range</th><th>Leverage</th><th>Trades</th><th>Win %</th><th>Avg Ret/Trade</th></tr></thead>
+          <tbody>
+            <tr><td style="color:#7b82a0">D</td><td>80 – 84</td><td>1x</td><td>283</td><td>50.9%</td><td style="color:#7b82a0">+0.621%</td></tr>
+            <tr><td style="color:#00d4aa">A</td><td>90 – 95</td><td>2x</td><td>2,643</td><td>52.8%</td><td style="color:#26de81">+1.720%</td></tr>
+            <tr><td style="color:#6c63ff">B</td><td>98 – 100</td><td>1x</td><td>442</td><td>51.4%</td><td style="color:#26de81">+1.207%</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Conclusion</div>
+        <div style="font-size:13px;line-height:1.8;color:var(--muted);padding:4px 0">
+          <div style="color:#fc5c65;font-weight:600;margin-bottom:8px">⚠ New structure MaxDD blew to -91.6% with 2x leverage</div>
+          <div>• Adding Band D (80-84) at 1x drags avg return: +0.621% vs +1.655% for Band A</div>
+          <div>• Expanding Band A from 92-95 → 90-95 adds lower-quality 90-92 setups under 2x</div>
+          <div>• No-leverage version Sharpe (1.23) is close to old, but CAGR drops -17pp</div>
+          <div style="color:#26de81;font-weight:600;margin-top:8px">✓ Old bands (92-95 2x | 98-100 1x) remain optimal</div>
+        </div>
       </div>
     </div>
   </section>
