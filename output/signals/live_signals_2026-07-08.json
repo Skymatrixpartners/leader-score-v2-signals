@@ -1,0 +1,95 @@
+{
+  "date": "2026-07-08",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 747.71,
+    "sma50": 739.01,
+    "sma200": 693.19,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "AXON",
+      "Band": "B",
+      "Leader_Score_V2": 98.84422110552765,
+      "Leverage": 1.0,
+      "Close": 640.46,
+      "ATR20": 32.916439999999994,
+      "Sector": "Technology"
+    },
+    {
+      "Ticker": "NIQ",
+      "Band": "A",
+      "Leader_Score_V2": 94.98492462311559,
+      "Leverage": 2.0,
+      "Close": 11.0,
+      "ATR20": 0.5159950000000002,
+      "Sector": "SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC."
+    },
+    {
+      "Ticker": "APPF",
+      "Band": "A",
+      "Leader_Score_V2": 94.62311557788945,
+      "Leverage": 2.0,
+      "Close": 179.42,
+      "ATR20": 7.802124999999998,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "SAIL",
+      "Band": "A",
+      "Leader_Score_V2": 94.47236180904522,
+      "Leverage": 2.0,
+      "Close": 16.19,
+      "ATR20": 1.0537000000000003,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "CLVT",
+      "Band": "A",
+      "Leader_Score_V2": 94.23115577889448,
+      "Leverage": 2.0,
+      "Close": 2.51,
+      "ATR20": 0.15825000000000006,
+      "Sector": "SERVICES-COMPUTER PROCESSING & DATA PREPARATION"
+    },
+    {
+      "Ticker": "MANH",
+      "Band": "A",
+      "Leader_Score_V2": 93.51758793969852,
+      "Leverage": 2.0,
+      "Close": 158.17,
+      "ATR20": 6.5949700000000036,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "IBM",
+      "Band": "A",
+      "Leader_Score_V2": 92.83417085427135,
+      "Leverage": 2.0,
+      "Close": 306.13,
+      "ATR20": 11.416825,
+      "Sector": "COMPUTER & OFFICE EQUIPMENT"
+    },
+    {
+      "Ticker": "VKTX",
+      "Band": "A",
+      "Leader_Score_V2": 92.2562814070352,
+      "Leverage": 2.0,
+      "Close": 42.13,
+      "ATR20": 2.1543499999999987,
+      "Sector": "PHARMACEUTICAL PREPARATIONS"
+    },
+    {
+      "Ticker": "IOT",
+      "Band": "A",
+      "Leader_Score_V2": 92.1105527638191,
+      "Leverage": 2.0,
+      "Close": 36.34,
+      "ATR20": 2.0457499999999995,
+      "Sector": "SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN"
+    }
+  ]
+}
