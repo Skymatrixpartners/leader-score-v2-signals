@@ -1,16 +1,13 @@
 name: Daily Live Signals
 
 on:
-  # 3:25 PM ET = 20:25 UTC (Nov-Mar, EST)
-  # 3:25 PM ET = 19:25 UTC (Mar-Nov, EDT)
-  # Run both to cover DST transitions — script is idempotent
   schedule:
-    - cron: '25 19 * * 1-5'   # 3:25 PM EDT (summer)
-    - cron: '25 20 * * 1-5'   # 3:25 PM EST (winter)
-  workflow_dispatch:            # allow manual trigger from GitHub UI
+    - cron: '25 19 * * 1-5'
+    - cron: '25 20 * * 1-5'
+  workflow_dispatch:
     inputs:
       date:
-        description: 'Signal date (YYYY-MM-DD), leave blank for today'
+        description: 'Signal date YYYY-MM-DD, leave blank for today'
         required: false
         default: ''
 
@@ -19,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: write   # needed to commit signals back to repo
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -36,36 +33,15 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Debug environment
+      - name: Debug API key
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
         run: |
-          echo "Python version: $(python --version)"
-          echo "Working dir: $(pwd)"
-          echo "Files in repo: $(ls)"
           if [ -n "$MASSIVE_API_KEY" ]; then
-            echo "MASSIVE_API_KEY: SET (length=${#MASSIVE_API_KEY})"
-            echo "MASSIVE_API_KEY first 4 chars: ${MASSIVE_API_KEY:0:4}"
+            echo "API key SET length=${#MASSIVE_API_KEY} first4=${MASSIVE_API_KEY:0:4}"
           else
-            echo "MASSIVE_API_KEY: NOT SET - this will cause failure"
+            echo "API key NOT SET"
           fi
-          pip list | grep -E "pandas|numpy|requests|dotenv"
-          echo "--- Testing API connectivity ---"
-          python - <<'EOF'
-import os, requests
-key = os.environ.get("MASSIVE_API_KEY", "")
-url = "https://api.massive.com/v2/aggs/ticker/SPY/range/1/day/2026-07-01/2026-07-07"
-try:
-    r = requests.get(url, params={"adjusted": "true", "sort": "asc", "limit": 5, "apiKey": key}, timeout=15)
-    print(f"API test - HTTP status: {r.status_code}")
-    data = r.json()
-    print(f"API test - status field: {data.get('status')}")
-    print(f"API test - results count: {len(data.get('results', []))}")
-    if r.status_code != 200:
-        print(f"API test - error: {data.get('error', data.get('message', r.text[:200]))}")
-except Exception as e:
-    print(f"API test - EXCEPTION: {e}")
-EOF
 
       - name: Generate signals
         env:
@@ -78,14 +54,13 @@ EOF
             python live_signal_generator.py
           fi
 
-      - name: Upload signals as artifact
+      - name: Upload signals artifact
         uses: actions/upload-artifact@v4
         with:
           name: live-signals-${{ github.run_id }}
           path: output/signals/
           retention-days: 90
 
-      # Optional: commit signals back to repo (remove if not wanted)
       - name: Commit signals to repo
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: |
@@ -94,16 +69,3 @@ EOF
           git add output/signals/ || true
           git diff --cached --quiet || git commit -m "signals: $(date -u '+%Y-%m-%d')"
           git push || true
-
-      # Optional: send webhook (Discord, Slack, etc.) — uncomment and configure
-      # - name: Send Discord notification
-      #   if: success()
-      #   env:
-      #     DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-      #   run: |
-      #     SIGNALS=$(cat trail_live/output/signals/live_signals_$(date +%Y-%m-%d).json 2>/dev/null || echo '{"signals":[]}')
-      #     COUNT=$(echo $SIGNALS | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d['signals']))")
-      #     REGIME=$(echo $SIGNALS | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['regime'])")
-      #     curl -s -X POST "$DISCORD_WEBHOOK" \
-      #       -H "Content-Type: application/json" \
-      #       -d "{\"content\": \"**Leader Score V2 Signals — $(date +%Y-%m-%d)**\\nRegime: $REGIME\\nSignals: $COUNT\"}"
