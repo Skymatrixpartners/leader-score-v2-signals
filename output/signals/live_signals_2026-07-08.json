@@ -47,15 +47,6 @@
       "Sector": "SERVICES-PREPACKAGED SOFTWARE"
     },
     {
-      "Ticker": "CLVT",
-      "Band": "A",
-      "Leader_Score_V2": 94.23115577889448,
-      "Leverage": 2.0,
-      "Close": 2.51,
-      "ATR20": 0.15825000000000006,
-      "Sector": "SERVICES-COMPUTER PROCESSING & DATA PREPARATION"
-    },
-    {
       "Ticker": "MANH",
       "Band": "A",
       "Leader_Score_V2": 93.51758793969852,

@@ -64,6 +64,9 @@ BAND_B_LO, BAND_B_HI = 98.0, 100.0   # 1x  — moonshots (no leverage)
 # Regime minimum scores
 REGIME_BULL_MIN       = 92.0
 REGIME_NEUTRAL_MIN    = 92.0
+# Universe quality filters
+MIN_PRICE      = 5.0          # exclude stocks below $5
+MIN_AVG_DVOL   = 500_000      # exclude stocks with 20-day avg dollar volume < $500k
 
 # Score weights (IC-validated, must sum to 1.0)
 WEIGHTS = {
@@ -241,10 +244,18 @@ def compute_score(df: pd.DataFrame) -> pd.Series:
 # ---------------------------------------------------------------------------
 
 def apply_filters(df: pd.DataFrame, regime: str, top_n: int) -> pd.DataFrame:
-    """Apply regime gate + band filter + top-N selection."""
+    """Apply regime gate + quality pre-filter + band filter + top-N selection."""
     if regime == "BEAR":
         print("  REGIME: BEAR — no trades today.")
         return pd.DataFrame()
+
+    # Quality pre-filters: price >= $5 and 20-day avg dollar volume >= $500k
+    before = len(df)
+    df = df[df["Close"] >= MIN_PRICE]
+    df = df[df["DollarVolume"] >= MIN_AVG_DVOL]
+    filtered = before - len(df)
+    if filtered:
+        print(f"  Pre-filter: removed {filtered} stocks (price <${MIN_PRICE} or avg dvol <${MIN_AVG_DVOL:,})")
 
     min_score = REGIME_BULL_MIN if regime == "BULL" else REGIME_NEUTRAL_MIN
 
