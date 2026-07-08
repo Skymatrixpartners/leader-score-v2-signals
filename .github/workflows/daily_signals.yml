@@ -2,8 +2,8 @@ name: Daily Live Signals
 
 on:
   schedule:
-    - cron: '25 19 * * 1-5'
-    - cron: '25 20 * * 1-5'
+    - cron: '0 19 * * 1-5'
+    - cron: '0 20 * * 1-5'
   workflow_dispatch:
     inputs:
       date:
