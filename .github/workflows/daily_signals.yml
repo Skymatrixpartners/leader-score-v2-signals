@@ -36,6 +36,20 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Debug environment
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+        run: |
+          echo "Python version: $(python --version)"
+          echo "Working dir: $(pwd)"
+          echo "Files: $(ls -la)"
+          if [ -n "$MASSIVE_API_KEY" ]; then
+            echo "MASSIVE_API_KEY: SET (length=${#MASSIVE_API_KEY})"
+          else
+            echo "MASSIVE_API_KEY: NOT SET - this will cause failure"
+          fi
+          pip list | grep -E "pandas|numpy|requests|dotenv"
+
       - name: Generate signals
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
