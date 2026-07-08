@@ -42,13 +42,30 @@ jobs:
         run: |
           echo "Python version: $(python --version)"
           echo "Working dir: $(pwd)"
-          echo "Files: $(ls -la)"
+          echo "Files in repo: $(ls)"
           if [ -n "$MASSIVE_API_KEY" ]; then
             echo "MASSIVE_API_KEY: SET (length=${#MASSIVE_API_KEY})"
+            echo "MASSIVE_API_KEY first 4 chars: ${MASSIVE_API_KEY:0:4}"
           else
             echo "MASSIVE_API_KEY: NOT SET - this will cause failure"
           fi
           pip list | grep -E "pandas|numpy|requests|dotenv"
+          echo "--- Testing API connectivity ---"
+          python - <<'EOF'
+import os, requests
+key = os.environ.get("MASSIVE_API_KEY", "")
+url = "https://api.massive.com/v2/aggs/ticker/SPY/range/1/day/2026-07-01/2026-07-07"
+try:
+    r = requests.get(url, params={"adjusted": "true", "sort": "asc", "limit": 5, "apiKey": key}, timeout=15)
+    print(f"API test - HTTP status: {r.status_code}")
+    data = r.json()
+    print(f"API test - status field: {data.get('status')}")
+    print(f"API test - results count: {len(data.get('results', []))}")
+    if r.status_code != 200:
+        print(f"API test - error: {data.get('error', data.get('message', r.text[:200]))}")
+except Exception as e:
+    print(f"API test - EXCEPTION: {e}")
+EOF
 
       - name: Generate signals
         env:
