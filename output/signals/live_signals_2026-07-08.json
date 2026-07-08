@@ -13,7 +13,7 @@
     {
       "Ticker": "MANH",
       "Band": "A",
-      "Leader_Score_V2": 94.90954773869346,
+      "Leader_Score_V2": 94.90452261306532,
       "Leverage": 2.0,
       "Close": 154.78,
       "ATR20": 6.633720000000002,
@@ -22,7 +22,7 @@
     {
       "Ticker": "OKTA",
       "Band": "A",
-      "Leader_Score_V2": 94.25628140703517,
+      "Leader_Score_V2": 94.12562814070351,
       "Leverage": 2.0,
       "Close": 146.77,
       "ATR20": 6.500559999999998,
@@ -31,7 +31,7 @@
     {
       "Ticker": "VLO",
       "Band": "A",
-      "Leader_Score_V2": 94.18592964824121,
+      "Leader_Score_V2": 94.12060301507537,
       "Leverage": 2.0,
       "Close": 282.88,
       "ATR20": 10.243524999999998,
@@ -40,7 +40,7 @@
     {
       "Ticker": "CF",
       "Band": "A",
-      "Leader_Score_V2": 93.73366834170854,
+      "Leader_Score_V2": 93.69346733668341,
       "Leverage": 2.0,
       "Close": 117.02,
       "ATR20": 3.971829999999998,
@@ -49,7 +49,7 @@
     {
       "Ticker": "NIQ",
       "Band": "A",
-      "Leader_Score_V2": 93.29648241206031,
+      "Leader_Score_V2": 93.25628140703519,
       "Leverage": 2.0,
       "Close": 10.94,
       "ATR20": 0.517495,
