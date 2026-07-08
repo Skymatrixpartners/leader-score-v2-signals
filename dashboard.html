@@ -61,6 +61,19 @@
     ::-webkit-scrollbar-thumb{background:rgba(108,99,255,.3);border-radius:3px}
     .heatmap-cell{border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-family:'JetBrains Mono';transition:transform .15s}
     .heatmap-cell:hover{transform:scale(1.08);z-index:10;position:relative}
+    /* Pipeline status */
+    .pipeline-status{margin:auto 0 0;padding:16px 20px;border-top:1px solid var(--border)}
+    .pipeline-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+    .status-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:#7b82a0}
+    .status-dot.live{background:var(--green);box-shadow:0 0 0 0 rgba(38,222,129,.6);animation:pulse-dot 2s infinite}
+    .status-dot.delayed{background:var(--gold)}
+    .status-dot.offline{background:var(--red)}
+    @keyframes pulse-dot{0%{box-shadow:0 0 0 0 rgba(38,222,129,.6)}70%{box-shadow:0 0 0 7px rgba(38,222,129,0)}100%{box-shadow:0 0 0 0 rgba(38,222,129,0)}}
+    .status-label{font-size:12px;font-weight:600;color:var(--muted)}
+    .status-label.live{color:var(--green)}
+    .status-label.delayed{color:var(--gold)}
+    .status-label.offline{color:var(--red)}
+    .status-sub{font-size:10px;color:var(--muted);padding-left:17px}
   </style>
 </head>
 <body>
@@ -75,7 +88,14 @@
   <a class="nav-item" data-section="quintile" onclick="showSection('quintile')"><span class="nav-icon">📉</span> Quintile Returns</a>
   <a class="nav-item" data-section="correlation" onclick="showSection('correlation')"><span class="nav-icon">🔗</span> Correlations</a>
   <a class="nav-item" data-section="leverage" onclick="showSection('leverage')"><span class="nav-icon">⚡</span> Leverage &amp; Costs</a>
-  <a class="nav-item" data-section="signals" onclick="showSection('signals')"><span class="nav-icon">🎯</span> Live Signals</a>
+  <a class="nav-item" data-section="signals" onclick="showSection('signals')"><span class="nav-icon">🎯</span> Live Signals <span id="nav-status-dot" style="width:7px;height:7px;border-radius:50%;background:#7b82a0;margin-left:auto;flex-shrink:0"></span></a>
+  <div class="pipeline-status">
+    <div class="pipeline-row">
+      <div class="status-dot" id="status-dot"></div>
+      <span class="status-label" id="status-label">Checking…</span>
+    </div>
+    <div class="status-sub" id="status-sub">Signal pipeline</div>
+  </div>
 </nav>
 <main class="main">
   <section id="overview" class="section active">
@@ -455,6 +475,27 @@ async function loadSignals() {
 
   const fileDate = targetFile.replace('live_signals_','').replace('.csv','');
   document.getElementById('sig-date').textContent = fileDate;
+
+  // Pipeline status indicator
+  const todayISO   = new Date().toISOString().slice(0,10);
+  const yesterday  = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  const dot        = document.getElementById('status-dot');
+  const lbl        = document.getElementById('status-label');
+  const sub        = document.getElementById('status-sub');
+  const navDot     = document.getElementById('nav-status-dot');
+  if (fileDate === todayISO) {
+    dot.className='status-dot live'; lbl.className='status-label live'; lbl.textContent='Live';
+    navDot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(38,222,129,.6);animation:pulse-dot 2s infinite;margin-left:auto;flex-shrink:0';
+    sub.textContent='Updated today';
+  } else if (fileDate === yesterday) {
+    dot.className='status-dot delayed'; lbl.className='status-label delayed'; lbl.textContent='Delayed';
+    navDot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--gold);margin-left:auto;flex-shrink:0';
+    sub.textContent='Last: ' + fileDate;
+  } else {
+    dot.className='status-dot offline'; lbl.className='status-label offline'; lbl.textContent='Offline';
+    navDot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--red);margin-left:auto;flex-shrink:0';
+    sub.textContent='Last: ' + fileDate;
+  }
   document.getElementById('sig-github-link').href = `https://github.com/Skymatrixpartners/leader-score-v2-signals/tree/main/output/signals`;
 
   let csv = '';
