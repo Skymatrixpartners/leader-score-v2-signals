@@ -189,24 +189,25 @@
   </section>
   <section id="bias" class="section">
     <div class="page-title">Look-Ahead Bias Test</div>
-    <div class="page-sub">How much edge disappears when scores use <strong style="color:var(--gold)">T-1 close</strong> (fully known, no ambiguity) vs T close &bull; Equal weight &bull; 0.2% round-trip cost &bull; 10-Year (2016&ndash;2026)</div>
+    <div class="page-sub">3-way comparison: <strong style="color:#6c63ff">Original (4 PM close)</strong> vs <strong style="color:#f0c040">Corrected (3:30 PM)</strong> vs <strong style="color:#00d4aa">Clean (T-1 close)</strong> &bull; Equal weight &bull; 0.2% round-trip cost &bull; 10-Year (2016&ndash;2026)</div>
     <div class="kpi-grid" id="bias-kpis"></div>
     <div class="card">
-      <div class="card-title">Equity Curve — Original (T close) vs Clean (T-1 close) <span class="badge">$100,000 start</span></div>
+      <div class="card-title">Equity Curve — Original vs Corrected (3:30 PM) vs Clean (T-1) <span class="badge">$100,000 start</span></div>
       <canvas id="bias-equity-chart" height="300"></canvas>
     </div>
     <div class="grid-2">
       <div class="card">
         <div class="card-title">Year-by-Year Returns</div>
-        <div class="tbl-wrap"><table><thead><tr><th>Year</th><th style="color:#6c63ff">Original (T close)</th><th style="color:#00d4aa">Clean (T-1 close)</th><th>Delta</th></tr></thead><tbody id="bias-year-tbody"></tbody></table></div>
+        <div class="tbl-wrap"><table><thead><tr><th>Year</th><th style="color:#6c63ff">Original</th><th style="color:#f0c040">Corrected 3:30</th><th style="color:#00d4aa">Clean T-1</th><th>Δ Orig−Corr</th></tr></thead><tbody id="bias-year-tbody"></tbody></table></div>
       </div>
       <div class="card">
         <div class="card-title">What This Means</div>
         <div style="font-size:13px;line-height:1.9;color:var(--muted)">
-          <div style="margin-bottom:10px"><span style="color:var(--accent);font-weight:600">Original (T close)</span> — scores use today's 4 PM close. At 3 PM entry, that close doesn't exist yet — it's look-ahead.</div>
-          <div style="margin-bottom:10px"><span style="color:var(--accent2);font-weight:600">Clean (T-1 close)</span> — scores use yesterday's close only. Zero ambiguity. This is what you can actually know before entering.</div>
+          <div style="margin-bottom:10px"><span style="color:#6c63ff;font-weight:600">Original (T close)</span> — scores use today's 4 PM close. At 3 PM entry, that close doesn't exist yet — it's look-ahead.</div>
+          <div style="margin-bottom:10px"><span style="color:#f0c040;font-weight:600">Corrected (3:30 PM)</span> — scores use today's 3:30 PM price &amp; cumulative volume. Honest: all data is known at entry time.</div>
+          <div style="margin-bottom:10px"><span style="color:var(--accent2);font-weight:600">Clean (T-1 close)</span> — scores use yesterday's close only. Zero ambiguity but overly conservative.</div>
           <div style="margin-bottom:10px"><span style="color:var(--gold);font-weight:600">Trade overlap: <span id="bias-overlap">—</span>% identical trades per day.</span> The two methods pick almost completely different stocks.</div>
-          <div style="color:var(--red);font-size:11px;margin-top:8px">Live system uses ~3 PM prices (not T-1 close), so live performance sits between these lines — but much closer to Clean.</div>
+          <div style="color:var(--red);font-size:11px;margin-top:8px">Most defensible live estimate: <strong>Corrected (3:30 PM)</strong> — uses only data available at entry time.</div>
         </div>
       </div>
     </div>
@@ -238,7 +239,7 @@
   </section>
 </main>
 <script>
-const PATHS={biasOrig:'output/backtest/bias_equity_original.csv',biasClean:'output/backtest/bias_equity_clean.csv',equity:'output/backtest/realistic_equity_mixed.csv',trades:'output/backtest/realistic_trades_mixed.csv',base:'output/backtest/realistic_equity_nocost.csv',lev1x:'output/backtest/realistic_equity_1x.csv',lev2x:'output/backtest/realistic_equity_mixed.csv',ic1d_cs:'output/research/ic_summary_FwdRet_1D.csv',ic5d_cs:'output/research/ic_summary_FwdRet_5D.csv',ic10d_cs:'output/research/ic_summary_FwdRet_10D.csv',ic1d_ts:'output/research/ic_timeseries_FwdRet_1D.csv',ic5d_ts:'output/research/ic_timeseries_FwdRet_5D.csv',ic10d_ts:'output/research/ic_timeseries_FwdRet_10D.csv',quint:'output/research/quintile_summary_FwdRet_10D.csv',corr:'output/research/feature_correlation_matrix.csv'};
+const PATHS={biasOrig:'output/backtest/bias_equity_original.csv',biasClean:'output/backtest/bias_equity_clean.csv',biasCorrected:'output/backtest/corrected_330_equity.csv',equity:'output/backtest/realistic_equity_mixed.csv',trades:'output/backtest/realistic_trades_mixed.csv',base:'output/backtest/realistic_equity_nocost.csv',lev1x:'output/backtest/realistic_equity_1x.csv',lev2x:'output/backtest/realistic_equity_mixed.csv',ic1d_cs:'output/research/ic_summary_FwdRet_1D.csv',ic5d_cs:'output/research/ic_summary_FwdRet_5D.csv',ic10d_cs:'output/research/ic_summary_FwdRet_10D.csv',ic1d_ts:'output/research/ic_timeseries_FwdRet_1D.csv',ic5d_ts:'output/research/ic_timeseries_FwdRet_5D.csv',ic10d_ts:'output/research/ic_timeseries_FwdRet_10D.csv',quint:'output/research/quintile_summary_FwdRet_10D.csv',corr:'output/research/feature_correlation_matrix.csv'};
 const ACCENT='#6c63ff',ACCENT2='#00d4aa',GOLD='#f0c040',GREEN='#26de81',RED='#fc5c65',MUTED='rgba(255,255,255,0.25)';
 Chart.defaults.color='#7b82a0';Chart.defaults.borderColor='rgba(255,255,255,0.06)';Chart.defaults.font.family='Inter';
 function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelector('[data-section="'+id+'"]').classList.add('active');}
@@ -302,7 +303,7 @@ function buildOverview(){
     scenarioCard('Mixed 2x+1x  (Band A @2x · Band B @1x)',eq,ACCENT2,tr);
   const skip=Math.max(1,Math.floor(eq.length/60));
   new Chart(document.getElementById('mini-equity'),{type:'line',data:{labels:eq.map((r,i)=>i%skip===0?r.Date.slice(0,7):''),datasets:[{label:'Portfolio',data:eq.map(r=>num(r.Portfolio_Value)),borderColor:ACCENT,backgroundColor:'rgba(108,99,255,.12)',borderWidth:2,fill:true,tension:.4,pointRadius:0,pointHoverRadius:4},{label:'SPY',data:eq.map(r=>num(r.SPY_Value)),borderColor:MUTED,borderWidth:1.5,fill:false,tension:.4,borderDash:[4,4],pointRadius:0,pointHoverRadius:3}]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#7b82a0',font:{size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#7b82a0',font:{size:10},maxRotation:0},grid:{display:false}},y:{ticks:{color:'#7b82a0',font:{size:10},callback:v=>((v-1)*100).toFixed(0)+'%'},grid:{color:'rgba(255,255,255,.04)'}}}}});
-  new Chart(document.getElementById('weights-chart'),{type:'doughnut',data:{labels:['RS10_Pct','RS5_Pct','RVOL_Pct','RS3_Pct','DolVol_Pct'],datasets:[{data:[0.45,0.25,0.20,0.05,0.05],backgroundColor:[ACCENT,ACCENT2,GOLD,GREEN,'#a29bfe'],borderWidth:2,borderColor:'#161b2e'}]},options:{plugins:{legend:{position:'right',labels:{font:{size:11},color:'#7b82a0',boxWidth:12}}},cutout:'65%'}});
+  new Chart(document.getElementById('weights-chart'),{type:'doughnut',data:{labels:['RS10_Pct','RS5_Pct','RVOL_Pct','RS3_Pct','DolVol_Pct'],datasets:[{data:[0.45,0.25,0.20,0.05,0.05],backgroundColor:[ACCENT,ACCENT2,GOLD,GREEN,'#a29bfe'],borderWidth:2,borderColor:'#161b2e'}]},options:{plugins:{legend:{position:'right',labels:{font:{size:11},color:'#7b82a0',boxWidth:12}}},cutout:'65%'}})
   const sm={};(DATA.trades||[]).forEach(t=>{const s=(t.Sector||'Unknown').slice(0,28);sm[s]=(sm[s]||0)+1;});
   const ss=Object.entries(sm).sort((a,b)=>b[1]-a[1]).slice(0,8);
   new Chart(document.getElementById('sector-chart'),{type:'bar',data:{labels:ss.map(([s])=>s),datasets:[{label:'Trades',data:ss.map(([,c])=>c),backgroundColor:ss.map((_,i)=>`hsla(${240+i*25},70%,65%,.75)`),borderRadius:4}]},options:{indexAxis:'y',...scaleOpts()}});
@@ -455,8 +456,8 @@ function buildLeverage(){
   }).join('');
 }
 function buildBias(){
-  const orig=DATA.biasOrig||[], clean=DATA.biasClean||[];
-  if(!orig.length&&!clean.length){document.getElementById('bias-kpis').innerHTML='<div style="color:var(--muted);font-size:13px;padding:12px">Bias data not loaded.</div>';return;}
+  const orig=DATA.biasOrig||[], clean=DATA.biasClean||[], corr=DATA.biasCorrected||[];
+  if(!orig.length&&!clean.length&&!corr.length){document.getElementById('bias-kpis').innerHTML='<div style="color:var(--muted);font-size:13px;padding:12px">Bias data not loaded.</div>';return;}
   function mets(eq){
     if(!eq.length)return{fin:100000,cagr:0,mdd:0,sharpe:0,calmar:0};
     const pv=eq.map(r=>num(r.Port));
@@ -473,27 +474,29 @@ function buildBias(){
     Object.keys(by).sort().forEach(y=>{const end=by[y][by[y].length-1];out[y]=(end/prev-1)*100;prev=end;});
     return out;
   }
-  const mo=mets(orig), mc=mets(clean);
-  const delta_cagr=mo.cagr-mc.cagr;
+  const mo=mets(orig), mc330=mets(corr), mc=mets(clean);
+  const delta_cagr=mo.cagr-mc330.cagr;
   document.getElementById('bias-kpis').innerHTML=`
     <div class="kpi" style="--accent-color:#6c63ff"><div class="kpi-label" style="color:#6c63ff">Original CAGR</div><div class="kpi-value" style="color:${mo.cagr>0?GREEN:RED}">${mo.cagr>=0?'+':''}${mo.cagr.toFixed(1)}%/yr</div><div class="kpi-sub">$${mo.fin.toLocaleString()} final &bull; MaxDD ${mo.mdd.toFixed(1)}%</div></div>
+    <div class="kpi" style="--accent-color:#f0c040"><div class="kpi-label" style="color:#f0c040">Corrected (3:30 PM)</div><div class="kpi-value" style="color:${mc330.cagr>0?GREEN:RED}">${mc330.cagr>=0?'+':''}${mc330.cagr.toFixed(1)}%/yr</div><div class="kpi-sub">$${mc330.fin.toLocaleString()} final &bull; Sharpe ${mc330.sharpe.toFixed(2)}</div></div>
     <div class="kpi" style="--accent-color:#00d4aa"><div class="kpi-label" style="color:#00d4aa">Clean CAGR (T-1)</div><div class="kpi-value" style="color:${mc.cagr>0?GREEN:RED}">${mc.cagr>=0?'+':''}${mc.cagr.toFixed(1)}%/yr</div><div class="kpi-sub">$${mc.fin.toLocaleString()} final &bull; MaxDD ${mc.mdd.toFixed(1)}%</div></div>
-    <div class="kpi" style="--accent-color:#fc5c65"><div class="kpi-label" style="color:#fc5c65">Look-Ahead Drag</div><div class="kpi-value" style="color:var(--red)">${delta_cagr>=0?'+':''}${delta_cagr.toFixed(1)} pp</div><div class="kpi-sub">CAGR inflated by this amount</div></div>
-    <div class="kpi" style="--accent-color:#f0c040"><div class="kpi-label" style="color:#f0c040">Trade Overlap</div><div class="kpi-value" style="color:var(--gold)">~23.5%</div><div class="kpi-sub">of stocks match both methods</div></div>`;
+    <div class="kpi" style="--accent-color:#fc5c65"><div class="kpi-label" style="color:#fc5c65">Look-Ahead Drag</div><div class="kpi-value" style="color:var(--red)">${delta_cagr>=0?'+':''}${delta_cagr.toFixed(1)} pp</div><div class="kpi-sub">Orig vs Corrected 3:30</div></div>
+    <div class="kpi" style="--accent-color:#a29bfe"><div class="kpi-label" style="color:#a29bfe">Trade Overlap</div><div class="kpi-value" style="color:#a29bfe">~23.5%</div><div class="kpi-sub">of stocks match both methods</div></div>`;
   document.getElementById('bias-overlap').textContent='23.5';
   // Equity chart
   const skip=Math.max(1,Math.floor(orig.length/60));
   const labels=orig.filter((_,i)=>i%skip===0).map(r=>r.Date.slice(0,7));
   const dOrig={label:'Original (T close)',data:orig.filter((_,i)=>i%skip===0).map(r=>num(r.Port)),borderColor:'#6c63ff',backgroundColor:'rgba(108,99,255,0.12)',fill:true,borderWidth:2.5,tension:.4,pointRadius:0};
+  const dCorr={label:'Corrected (3:30 PM)',data:corr.filter((_,i)=>i%skip===0).map(r=>num(r.Port)),borderColor:'#f0c040',fill:false,borderWidth:2,tension:.4,pointRadius:0};
   const dClean={label:'Clean T-1 (no look-ahead)',data:clean.filter((_,i)=>i%skip===0).map(r=>num(r.Port)),borderColor:'#00d4aa',fill:false,borderWidth:2,tension:.4,pointRadius:0};
   const dBase={label:'$100k baseline',data:orig.filter((_,i)=>i%skip===0).map(()=>100000),borderColor:'rgba(255,255,255,0.2)',borderDash:[5,5],fill:false,borderWidth:1,pointRadius:0};
-  new Chart(document.getElementById('bias-equity-chart'),{type:'line',data:{labels,datasets:[dOrig,dClean,dBase]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#7b82a0',font:{size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#7b82a0',font:{size:10},maxRotation:0},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#7b82a0',callback:v=>'$'+Math.round(v/1000)+'k'},grid:{color:'rgba(255,255,255,.04)'}}}}});
+  new Chart(document.getElementById('bias-equity-chart'),{type:'line',data:{labels,datasets:[dOrig,dCorr,dClean,dBase]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#7b82a0',font:{size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#7b82a0',font:{size:10},maxRotation:0},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#7b82a0',callback:v=>'$'+Math.round(v/1000)+'k'},grid:{color:'rgba(255,255,255,.04)'}}}}});
   // Year table
-  const yo=yrRets(orig), yc=yrRets(clean);
-  const years=[...new Set([...Object.keys(yo),...Object.keys(yc)])].sort();
+  const yo=yrRets(orig), yc330=yrRets(corr), yc=yrRets(clean);
+  const years=[...new Set([...Object.keys(yo),...Object.keys(yc330),...Object.keys(yc)])].sort();
   document.getElementById('bias-year-tbody').innerHTML=years.map(yr=>{
-    const o=yo[yr]??null, c=yc[yr]??null, d=(o!=null&&c!=null)?o-c:null;
-    return`<tr><td style="color:var(--gold);font-weight:700">${yr}</td><td class="${(o||0)>=0?'tag-pos':'tag-neg'}" style="color:#6c63ff">${o!=null?(o>=0?'+':'')+o.toFixed(1)+'%':'--'}</td><td class="${(c||0)>=0?'tag-pos':'tag-neg'}" style="color:#00d4aa">${c!=null?(c>=0?'+':'')+c.toFixed(1)+'%':'--'}</td><td style="color:${d==null?'var(--muted)':d>0?GREEN:RED}">${d!=null?(d>=0?'+':'')+d.toFixed(1)+' pp':'--'}</td></tr>`;
+    const o=yo[yr]??null, r330=yc330[yr]??null, c=yc[yr]??null, d=(o!=null&&r330!=null)?o-r330:null;
+    return`<tr><td style="color:var(--gold);font-weight:700">${yr}</td><td class="${(o||0)>=0?'tag-pos':'tag-neg'}" style="color:#6c63ff">${o!=null?(o>=0?'+':'')+o.toFixed(1)+'%':'--'}</td><td class="${(r330||0)>=0?'tag-pos':'tag-neg'}" style="color:#f0c040">${r330!=null?(r330>=0?'+':'')+r330.toFixed(1)+'%':'--'}</td><td class="${(c||0)>=0?'tag-pos':'tag-neg'}" style="color:#00d4aa">${c!=null?(c>=0?'+':'')+c.toFixed(1)+'%':'--'}</td><td style="color:${d==null?'var(--muted)':d>0?GREEN:RED}">${d!=null?(d>=0?'+':'')+d.toFixed(1)+' pp':'--'}</td></tr>`;
   }).join('');
 }
 loadAll().catch(err=>{
