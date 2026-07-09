@@ -239,7 +239,7 @@
   </section>
 </main>
 <script>
-const PATHS={biasOrig:'output/backtest/bias_equity_original.csv',biasClean:'output/backtest/bias_equity_clean.csv',biasCorrected:'output/backtest/corrected_330_equity.csv',equity:'output/backtest/realistic_equity_mixed.csv',trades:'output/backtest/realistic_trades_mixed.csv',base:'output/backtest/realistic_equity_nocost.csv',lev1x:'output/backtest/realistic_equity_1x.csv',lev2x:'output/backtest/realistic_equity_mixed.csv',ic1d_cs:'output/research/ic_summary_FwdRet_1D.csv',ic5d_cs:'output/research/ic_summary_FwdRet_5D.csv',ic10d_cs:'output/research/ic_summary_FwdRet_10D.csv',ic1d_ts:'output/research/ic_timeseries_FwdRet_1D.csv',ic5d_ts:'output/research/ic_timeseries_FwdRet_5D.csv',ic10d_ts:'output/research/ic_timeseries_FwdRet_10D.csv',quint:'output/research/quintile_summary_FwdRet_10D.csv',corr:'output/research/feature_correlation_matrix.csv'};
+const PATHS={biasOrig:'output/backtest/bias_equity_original.csv',biasClean:'output/backtest/bias_equity_clean.csv',biasCorrected:'output/backtest/corrected_330_equity.csv',biasLev:'output/backtest/corrected_330_equity_lev.csv',equity:'output/backtest/realistic_equity_mixed.csv',trades:'output/backtest/realistic_trades_mixed.csv',base:'output/backtest/realistic_equity_nocost.csv',lev1x:'output/backtest/realistic_equity_1x.csv',lev2x:'output/backtest/realistic_equity_mixed.csv',ic1d_cs:'output/research/ic_summary_FwdRet_1D.csv',ic5d_cs:'output/research/ic_summary_FwdRet_5D.csv',ic10d_cs:'output/research/ic_summary_FwdRet_10D.csv',ic1d_ts:'output/research/ic_timeseries_FwdRet_1D.csv',ic5d_ts:'output/research/ic_timeseries_FwdRet_5D.csv',ic10d_ts:'output/research/ic_timeseries_FwdRet_10D.csv',quint:'output/research/quintile_summary_FwdRet_10D.csv',corr:'output/research/feature_correlation_matrix.csv'};
 const ACCENT='#6c63ff',ACCENT2='#00d4aa',GOLD='#f0c040',GREEN='#26de81',RED='#fc5c65',MUTED='rgba(255,255,255,0.25)';
 Chart.defaults.color='#7b82a0';Chart.defaults.borderColor='rgba(255,255,255,0.06)';Chart.defaults.font.family='Inter';
 function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelector('[data-section="'+id+'"]').classList.add('active');}
@@ -456,8 +456,8 @@ function buildLeverage(){
   }).join('');
 }
 function buildBias(){
-  const orig=DATA.biasOrig||[], clean=DATA.biasClean||[], corr=DATA.biasCorrected||[];
-  if(!orig.length&&!clean.length&&!corr.length){document.getElementById('bias-kpis').innerHTML='<div style="color:var(--muted);font-size:13px;padding:12px">Bias data not loaded.</div>';return;}
+  const orig=DATA.biasOrig||[], clean=DATA.biasClean||[], corr=DATA.biasCorrected||[], lev=DATA.biasLev||[];
+  if(!orig.length&&!clean.length&&!corr.length&&!lev.length){document.getElementById('bias-kpis').innerHTML='<div style="color:var(--muted);font-size:13px;padding:12px">Bias data not loaded.</div>';return;}
   function mets(eq){
     if(!eq.length)return{fin:100000,cagr:0,mdd:0,sharpe:0,calmar:0};
     const pv=eq.map(r=>num(r.Port));
@@ -474,23 +474,24 @@ function buildBias(){
     Object.keys(by).sort().forEach(y=>{const end=by[y][by[y].length-1];out[y]=(end/prev-1)*100;prev=end;});
     return out;
   }
-  const mo=mets(orig), mc330=mets(corr), mc=mets(clean);
+  const mo=mets(orig), mc330=mets(corr), mlev=mets(lev), mc=mets(clean);
   const delta_cagr=mo.cagr-mc330.cagr;
   document.getElementById('bias-kpis').innerHTML=`
     <div class="kpi" style="--accent-color:#6c63ff"><div class="kpi-label" style="color:#6c63ff">Original CAGR</div><div class="kpi-value" style="color:${mo.cagr>0?GREEN:RED}">${mo.cagr>=0?'+':''}${mo.cagr.toFixed(1)}%/yr</div><div class="kpi-sub">$${mo.fin.toLocaleString()} final &bull; MaxDD ${mo.mdd.toFixed(1)}%</div></div>
-    <div class="kpi" style="--accent-color:#f0c040"><div class="kpi-label" style="color:#f0c040">Corrected (3:30 PM)</div><div class="kpi-value" style="color:${mc330.cagr>0?GREEN:RED}">${mc330.cagr>=0?'+':''}${mc330.cagr.toFixed(1)}%/yr</div><div class="kpi-sub">$${mc330.fin.toLocaleString()} final &bull; Sharpe ${mc330.sharpe.toFixed(2)}</div></div>
+    <div class="kpi" style="--accent-color:#f0c040"><div class="kpi-label" style="color:#f0c040">Corrected 1× (3:30 PM)</div><div class="kpi-value" style="color:${mc330.cagr>0?GREEN:RED}">${mc330.cagr>=0?'+':''}${mc330.cagr.toFixed(1)}%/yr</div><div class="kpi-sub">$${mc330.fin.toLocaleString()} final &bull; Sharpe ${mc330.sharpe.toFixed(2)}</div></div>
+    <div class="kpi" style="--accent-color:#ff9f43"><div class="kpi-label" style="color:#ff9f43">Corrected 2×+1× (3:30 PM)</div><div class="kpi-value" style="color:${mlev.cagr>0?GREEN:RED}">${mlev.cagr>=0?'+':''}${mlev.cagr.toFixed(1)}%/yr</div><div class="kpi-sub">$${mlev.fin.toLocaleString()} final &bull; Sharpe ${mlev.sharpe.toFixed(2)}</div></div>
     <div class="kpi" style="--accent-color:#00d4aa"><div class="kpi-label" style="color:#00d4aa">Clean CAGR (T-1)</div><div class="kpi-value" style="color:${mc.cagr>0?GREEN:RED}">${mc.cagr>=0?'+':''}${mc.cagr.toFixed(1)}%/yr</div><div class="kpi-sub">$${mc.fin.toLocaleString()} final &bull; MaxDD ${mc.mdd.toFixed(1)}%</div></div>
-    <div class="kpi" style="--accent-color:#fc5c65"><div class="kpi-label" style="color:#fc5c65">Look-Ahead Drag</div><div class="kpi-value" style="color:var(--red)">${delta_cagr>=0?'+':''}${delta_cagr.toFixed(1)} pp</div><div class="kpi-sub">Orig vs Corrected 3:30</div></div>
-    <div class="kpi" style="--accent-color:#a29bfe"><div class="kpi-label" style="color:#a29bfe">Trade Overlap</div><div class="kpi-value" style="color:#a29bfe">~23.5%</div><div class="kpi-sub">of stocks match both methods</div></div>`;
+    <div class="kpi" style="--accent-color:#fc5c65"><div class="kpi-label" style="color:#fc5c65">Look-Ahead Drag</div><div class="kpi-value" style="color:var(--red)">${delta_cagr>=0?'+':''}${delta_cagr.toFixed(1)} pp</div><div class="kpi-sub">Orig vs Corrected 1×</div></div>`;
   document.getElementById('bias-overlap').textContent='23.5';
   // Equity chart
   const skip=Math.max(1,Math.floor(orig.length/60));
   const labels=orig.filter((_,i)=>i%skip===0).map(r=>r.Date.slice(0,7));
   const dOrig={label:'Original (T close)',data:orig.filter((_,i)=>i%skip===0).map(r=>num(r.Port)),borderColor:'#6c63ff',backgroundColor:'rgba(108,99,255,0.12)',fill:true,borderWidth:2.5,tension:.4,pointRadius:0};
-  const dCorr={label:'Corrected (3:30 PM)',data:corr.filter((_,i)=>i%skip===0).map(r=>num(r.Port)),borderColor:'#f0c040',fill:false,borderWidth:2,tension:.4,pointRadius:0};
+  const dCorr={label:'Corrected 1× (3:30 PM)',data:corr.filter((_,i)=>i%skip===0).map(r=>num(r.Port)),borderColor:'#f0c040',fill:false,borderWidth:2,tension:.4,pointRadius:0};
+  const dLev={label:'Corrected 2×+1× (3:30 PM)',data:lev.filter((_,i)=>i%skip===0).map(r=>num(r.Port)),borderColor:'#ff9f43',borderDash:[4,3],fill:false,borderWidth:1.8,tension:.4,pointRadius:0};
   const dClean={label:'Clean T-1 (no look-ahead)',data:clean.filter((_,i)=>i%skip===0).map(r=>num(r.Port)),borderColor:'#00d4aa',fill:false,borderWidth:2,tension:.4,pointRadius:0};
   const dBase={label:'$100k baseline',data:orig.filter((_,i)=>i%skip===0).map(()=>100000),borderColor:'rgba(255,255,255,0.2)',borderDash:[5,5],fill:false,borderWidth:1,pointRadius:0};
-  new Chart(document.getElementById('bias-equity-chart'),{type:'line',data:{labels,datasets:[dOrig,dCorr,dClean,dBase]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#7b82a0',font:{size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#7b82a0',font:{size:10},maxRotation:0},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#7b82a0',callback:v=>'$'+Math.round(v/1000)+'k'},grid:{color:'rgba(255,255,255,.04)'}}}}});
+  new Chart(document.getElementById('bias-equity-chart'),{type:'line',data:{labels,datasets:[dOrig,dCorr,dLev,dClean,dBase]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#7b82a0',font:{size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#7b82a0',font:{size:10},maxRotation:0},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#7b82a0',callback:v=>'$'+Math.round(v/1000)+'k'},grid:{color:'rgba(255,255,255,.04)'}}}}});
   // Year table
   const yo=yrRets(orig), yc330=yrRets(corr), yc=yrRets(clean);
   const years=[...new Set([...Object.keys(yo),...Object.keys(yc330),...Object.keys(yc)])].sort();
