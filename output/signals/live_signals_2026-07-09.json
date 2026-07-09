@@ -1,0 +1,41 @@
+{
+  "date": "2026-07-09",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 751.71,
+    "sma50": 740.37,
+    "sma200": 694.04,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "NET",
+      "Band": "A",
+      "Leader_Score_V2": 93.98994974874373,
+      "Leverage": 2.0,
+      "Close": 275.8,
+      "ATR20": 12.475675,
+      "Sector": "Technology"
+    },
+    {
+      "Ticker": "NTAP",
+      "Band": "A",
+      "Leader_Score_V2": 93.90954773869348,
+      "Leverage": 2.0,
+      "Close": 171.73,
+      "ATR20": 6.315805,
+      "Sector": "COMPUTER STORAGE DEVICES"
+    },
+    {
+      "Ticker": "WDAY",
+      "Band": "A",
+      "Leader_Score_V2": 93.18090452261308,
+      "Leverage": 2.0,
+      "Close": 138.34,
+      "ATR20": 6.848735,
+      "Sector": "Software & Services"
+    }
+  ]
+}
