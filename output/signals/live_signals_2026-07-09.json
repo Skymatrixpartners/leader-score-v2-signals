@@ -13,7 +13,7 @@
     {
       "Ticker": "NET",
       "Band": "A",
-      "Leader_Score_V2": 93.98994974874373,
+      "Leader_Score_V2": 93.88944723618091,
       "Leverage": 2.0,
       "Close": 275.8,
       "ATR20": 12.475675,
@@ -22,7 +22,7 @@
     {
       "Ticker": "NTAP",
       "Band": "A",
-      "Leader_Score_V2": 93.90954773869348,
+      "Leader_Score_V2": 93.88944723618091,
       "Leverage": 2.0,
       "Close": 171.73,
       "ATR20": 6.315805,
@@ -36,6 +36,15 @@
       "Close": 138.34,
       "ATR20": 6.848735,
       "Sector": "Software & Services"
+    },
+    {
+      "Ticker": "DINO",
+      "Band": "A",
+      "Leader_Score_V2": 92.2462311557789,
+      "Leverage": 2.0,
+      "Close": 77.52,
+      "ATR20": 2.5477500000000006,
+      "Sector": "Energy"
     }
   ]
 }
