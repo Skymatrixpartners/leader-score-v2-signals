@@ -1,0 +1,59 @@
+{
+  "date": "2026-07-10",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 754.95,
+    "sma50": 741.24,
+    "sma200": 694.48,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "META",
+      "Band": "B",
+      "Leader_Score_V2": 99.39698492462313,
+      "Leverage": 1.0,
+      "Close": 669.21,
+      "ATR20": 25.26447500000001,
+      "Sector": "Technology"
+    },
+    {
+      "Ticker": "NTNX",
+      "Band": "A",
+      "Leader_Score_V2": 94.88442211055276,
+      "Leverage": 2.0,
+      "Close": 54.79,
+      "ATR20": 2.120994999999999,
+      "Sector": "Software & Services"
+    },
+    {
+      "Ticker": "U",
+      "Band": "A",
+      "Leader_Score_V2": 94.53266331658291,
+      "Leverage": 2.0,
+      "Close": 30.89,
+      "ATR20": 1.5383999999999998,
+      "Sector": "Software & Services"
+    },
+    {
+      "Ticker": "INSP",
+      "Band": "A",
+      "Leader_Score_V2": 93.32663316582916,
+      "Leverage": 2.0,
+      "Close": 51.76,
+      "ATR20": 2.3271350000000006,
+      "Sector": "SURGICAL & MEDICAL INSTRUMENTS & APPARATUS"
+    },
+    {
+      "Ticker": "MTN",
+      "Band": "A",
+      "Leader_Score_V2": 92.56281407035176,
+      "Leverage": 2.0,
+      "Close": 150.14,
+      "ATR20": 5.9123699999999975,
+      "Sector": "SERVICES-MISCELLANEOUS AMUSEMENT & RECREATION"
+    }
+  ]
+}
