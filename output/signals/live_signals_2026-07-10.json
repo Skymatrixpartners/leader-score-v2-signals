@@ -22,7 +22,7 @@
     {
       "Ticker": "NTNX",
       "Band": "A",
-      "Leader_Score_V2": 94.88442211055276,
+      "Leader_Score_V2": 94.89447236180905,
       "Leverage": 2.0,
       "Close": 54.79,
       "ATR20": 2.120994999999999,
@@ -31,7 +31,7 @@
     {
       "Ticker": "U",
       "Band": "A",
-      "Leader_Score_V2": 94.53266331658291,
+      "Leader_Score_V2": 94.53768844221105,
       "Leverage": 2.0,
       "Close": 30.89,
       "ATR20": 1.5383999999999998,
@@ -40,7 +40,7 @@
     {
       "Ticker": "INSP",
       "Band": "A",
-      "Leader_Score_V2": 93.32663316582916,
+      "Leader_Score_V2": 93.29648241206031,
       "Leverage": 2.0,
       "Close": 51.76,
       "ATR20": 2.3271350000000006,
