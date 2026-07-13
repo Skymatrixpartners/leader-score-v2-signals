@@ -1,0 +1,68 @@
+{
+  "date": "2026-07-13",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 749.17,
+    "sma50": 741.99,
+    "sma200": 694.91,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "TEAM",
+      "Band": "B",
+      "Leader_Score_V2": 98.19597989949749,
+      "Leverage": 1.0,
+      "Close": 96.16,
+      "ATR20": 5.418259999999999,
+      "Sector": "Software & Services"
+    },
+    {
+      "Ticker": "DINO",
+      "Band": "A",
+      "Leader_Score_V2": 94.91457286432161,
+      "Leverage": 2.0,
+      "Close": 81.7,
+      "ATR20": 2.6095000000000006,
+      "Sector": "Energy"
+    },
+    {
+      "Ticker": "MPC",
+      "Band": "A",
+      "Leader_Score_V2": 93.2361809045226,
+      "Leverage": 2.0,
+      "Close": 296.88,
+      "ATR20": 8.586964999999998,
+      "Sector": "Energy"
+    },
+    {
+      "Ticker": "NIQ",
+      "Band": "A",
+      "Leader_Score_V2": 92.69849246231156,
+      "Leverage": 2.0,
+      "Close": 11.07,
+      "ATR20": 0.5499450000000001,
+      "Sector": "SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC."
+    },
+    {
+      "Ticker": "OXY",
+      "Band": "A",
+      "Leader_Score_V2": 92.51256281407036,
+      "Leverage": 2.0,
+      "Close": 54.81,
+      "ATR20": 1.6645800000000004,
+      "Sector": "CRUDE PETROLEUM & NATURAL GAS"
+    },
+    {
+      "Ticker": "CMG",
+      "Band": "A",
+      "Leader_Score_V2": 92.26633165829145,
+      "Leverage": 2.0,
+      "Close": 36.63,
+      "ATR20": 1.1962750000000015,
+      "Sector": "Consumer Discretionary"
+    }
+  ]
+}
