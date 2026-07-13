@@ -22,7 +22,7 @@
     {
       "Ticker": "DINO",
       "Band": "A",
-      "Leader_Score_V2": 94.91457286432161,
+      "Leader_Score_V2": 94.88944723618091,
       "Leverage": 2.0,
       "Close": 81.7,
       "ATR20": 2.6095000000000006,
@@ -31,7 +31,7 @@
     {
       "Ticker": "MPC",
       "Band": "A",
-      "Leader_Score_V2": 93.2361809045226,
+      "Leader_Score_V2": 93.17587939698493,
       "Leverage": 2.0,
       "Close": 296.88,
       "ATR20": 8.586964999999998,
@@ -49,7 +49,7 @@
     {
       "Ticker": "OXY",
       "Band": "A",
-      "Leader_Score_V2": 92.51256281407036,
+      "Leader_Score_V2": 92.5175879396985,
       "Leverage": 2.0,
       "Close": 54.81,
       "ATR20": 1.6645800000000004,
@@ -58,7 +58,7 @@
     {
       "Ticker": "CMG",
       "Band": "A",
-      "Leader_Score_V2": 92.26633165829145,
+      "Leader_Score_V2": 92.24120603015074,
       "Leverage": 2.0,
       "Close": 36.63,
       "ATR20": 1.1962750000000015,
