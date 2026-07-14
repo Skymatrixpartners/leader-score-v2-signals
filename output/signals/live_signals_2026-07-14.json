@@ -1,0 +1,95 @@
+{
+  "date": "2026-07-14",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 751.83,
+    "sma50": 742.65,
+    "sma200": 695.37,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "OKTA",
+      "Band": "A",
+      "Leader_Score_V2": 94.86934673366834,
+      "Leverage": 2.0,
+      "Close": 154.62,
+      "ATR20": 7.658264999999998,
+      "Sector": "Technology"
+    },
+    {
+      "Ticker": "AVTR",
+      "Band": "A",
+      "Leader_Score_V2": 94.80402010050251,
+      "Leverage": 2.0,
+      "Close": 11.29,
+      "ATR20": 0.44625000000000015,
+      "Sector": "LABORATORY ANALYTICAL INSTRUMENTS"
+    },
+    {
+      "Ticker": "NET",
+      "Band": "A",
+      "Leader_Score_V2": 94.20603015075378,
+      "Leverage": 2.0,
+      "Close": 281.75,
+      "ATR20": 12.721780000000003,
+      "Sector": "Technology"
+    },
+    {
+      "Ticker": "MPC",
+      "Band": "A",
+      "Leader_Score_V2": 93.95477386934672,
+      "Leverage": 2.0,
+      "Close": 303.4,
+      "ATR20": 8.494964999999997,
+      "Sector": "Energy"
+    },
+    {
+      "Ticker": "VLO",
+      "Band": "A",
+      "Leader_Score_V2": 93.67336683417086,
+      "Leverage": 2.0,
+      "Close": 301.43,
+      "ATR20": 10.255275000000001,
+      "Sector": "Energy"
+    },
+    {
+      "Ticker": "EXPD",
+      "Band": "A",
+      "Leader_Score_V2": 93.53768844221106,
+      "Leverage": 2.0,
+      "Close": 178.22,
+      "ATR20": 3.4867500000000007,
+      "Sector": "ARRANGEMENT OF TRANSPORTATION OF FREIGHT & CARGO"
+    },
+    {
+      "Ticker": "DINO",
+      "Band": "A",
+      "Leader_Score_V2": 92.8743718592965,
+      "Leverage": 2.0,
+      "Close": 83.11,
+      "ATR20": 2.6175000000000006,
+      "Sector": "Energy"
+    },
+    {
+      "Ticker": "OXY",
+      "Band": "A",
+      "Leader_Score_V2": 92.60804020100502,
+      "Leverage": 2.0,
+      "Close": 54.57,
+      "ATR20": 1.6125950000000002,
+      "Sector": "CRUDE PETROLEUM & NATURAL GAS"
+    },
+    {
+      "Ticker": "PSX",
+      "Band": "A",
+      "Leader_Score_V2": 92.52261306532664,
+      "Leverage": 2.0,
+      "Close": 201.45,
+      "ATR20": 5.483629999999996,
+      "Sector": "Energy"
+    }
+  ]
+}
