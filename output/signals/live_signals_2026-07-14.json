@@ -13,7 +13,7 @@
     {
       "Ticker": "OKTA",
       "Band": "A",
-      "Leader_Score_V2": 94.86934673366834,
+      "Leader_Score_V2": 94.95477386934674,
       "Leverage": 2.0,
       "Close": 154.62,
       "ATR20": 7.658264999999998,
@@ -22,7 +22,7 @@
     {
       "Ticker": "AVTR",
       "Band": "A",
-      "Leader_Score_V2": 94.80402010050251,
+      "Leader_Score_V2": 94.78391959798995,
       "Leverage": 2.0,
       "Close": 11.29,
       "ATR20": 0.44625000000000015,
@@ -31,65 +31,74 @@
     {
       "Ticker": "NET",
       "Band": "A",
-      "Leader_Score_V2": 94.20603015075378,
+      "Leader_Score_V2": 94.10050251256283,
       "Leverage": 2.0,
       "Close": 281.75,
       "ATR20": 12.721780000000003,
       "Sector": "Technology"
     },
     {
+      "Ticker": "PSX",
+      "Band": "A",
+      "Leader_Score_V2": 94.03517587939699,
+      "Leverage": 2.0,
+      "Close": 201.45,
+      "ATR20": 5.483629999999996,
+      "Sector": "Energy"
+    },
+    {
       "Ticker": "MPC",
       "Band": "A",
-      "Leader_Score_V2": 93.95477386934672,
+      "Leader_Score_V2": 93.85929648241206,
       "Leverage": 2.0,
       "Close": 303.4,
       "ATR20": 8.494964999999997,
       "Sector": "Energy"
     },
     {
-      "Ticker": "VLO",
-      "Band": "A",
-      "Leader_Score_V2": 93.67336683417086,
-      "Leverage": 2.0,
-      "Close": 301.43,
-      "ATR20": 10.255275000000001,
-      "Sector": "Energy"
-    },
-    {
       "Ticker": "EXPD",
       "Band": "A",
-      "Leader_Score_V2": 93.53768844221106,
+      "Leader_Score_V2": 93.49748743718594,
       "Leverage": 2.0,
       "Close": 178.22,
       "ATR20": 3.4867500000000007,
       "Sector": "ARRANGEMENT OF TRANSPORTATION OF FREIGHT & CARGO"
     },
     {
-      "Ticker": "DINO",
+      "Ticker": "VLO",
       "Band": "A",
-      "Leader_Score_V2": 92.8743718592965,
+      "Leader_Score_V2": 93.45226130653268,
       "Leverage": 2.0,
-      "Close": 83.11,
-      "ATR20": 2.6175000000000006,
+      "Close": 301.43,
+      "ATR20": 10.255275000000001,
       "Sector": "Energy"
     },
     {
       "Ticker": "OXY",
       "Band": "A",
-      "Leader_Score_V2": 92.60804020100502,
+      "Leader_Score_V2": 92.58793969849246,
       "Leverage": 2.0,
       "Close": 54.57,
       "ATR20": 1.6125950000000002,
       "Sector": "CRUDE PETROLEUM & NATURAL GAS"
     },
     {
-      "Ticker": "PSX",
+      "Ticker": "DINO",
       "Band": "A",
-      "Leader_Score_V2": 92.52261306532664,
+      "Leader_Score_V2": 92.44723618090453,
       "Leverage": 2.0,
-      "Close": 201.45,
-      "ATR20": 5.483629999999996,
+      "Close": 83.11,
+      "ATR20": 2.6175000000000006,
       "Sector": "Energy"
+    },
+    {
+      "Ticker": "DJT",
+      "Band": "A",
+      "Leader_Score_V2": 92.03517587939697,
+      "Leverage": 2.0,
+      "Close": 9.03,
+      "ATR20": 0.5116649999999998,
+      "Sector": "SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC."
     }
   ]
 }
