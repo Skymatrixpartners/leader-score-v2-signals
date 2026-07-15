@@ -15,14 +15,14 @@
       "Band": "B",
       "Leader_Score_V2": 99.91457286432161,
       "Leverage": 1.0,
-      "Close": 55.511,
+      "Close": 55.52,
       "ATR20": 1.8592750000000007,
       "Sector": "SERVICES-BUSINESS SERVICES, NEC"
     },
     {
       "Ticker": "BBY",
       "Band": "A",
-      "Leader_Score_V2": 93.63316582914574,
+      "Leader_Score_V2": 93.62814070351759,
       "Leverage": 2.0,
       "Close": 85.37,
       "ATR20": 2.575245,
@@ -31,7 +31,7 @@
     {
       "Ticker": "IVZ",
       "Band": "A",
-      "Leader_Score_V2": 93.5175879396985,
+      "Leader_Score_V2": 93.49246231155779,
       "Leverage": 2.0,
       "Close": 30.3,
       "ATR20": 1.0357450000000001,
@@ -40,7 +40,7 @@
     {
       "Ticker": "NDAQ",
       "Band": "A",
-      "Leader_Score_V2": 93.43718592964825,
+      "Leader_Score_V2": 93.39698492462313,
       "Leverage": 2.0,
       "Close": 91.36,
       "ATR20": 3.034485000000001,
@@ -49,7 +49,7 @@
     {
       "Ticker": "KMX",
       "Band": "A",
-      "Leader_Score_V2": 93.29648241206029,
+      "Leader_Score_V2": 93.2713567839196,
       "Leverage": 2.0,
       "Close": 58.94,
       "ATR20": 2.554665,
@@ -67,7 +67,7 @@
     {
       "Ticker": "KKR",
       "Band": "A",
-      "Leader_Score_V2": 92.30150753768844,
+      "Leader_Score_V2": 92.28140703517587,
       "Leverage": 2.0,
       "Close": 100.95,
       "ATR20": 3.4096949999999993,
@@ -76,7 +76,7 @@
     {
       "Ticker": "RHI",
       "Band": "A",
-      "Leader_Score_V2": 92.23115577889448,
+      "Leader_Score_V2": 92.18592964824121,
       "Leverage": 2.0,
       "Close": 36.7,
       "ATR20": 1.6767499999999997,
@@ -85,7 +85,7 @@
     {
       "Ticker": "CRBG",
       "Band": "A",
-      "Leader_Score_V2": 92.21608040201005,
+      "Leader_Score_V2": 92.17587939698493,
       "Leverage": 2.0,
       "Close": 31.87,
       "ATR20": 0.8489999999999999,
@@ -94,7 +94,7 @@
     {
       "Ticker": "SF",
       "Band": "A",
-      "Leader_Score_V2": 92.06030150753769,
+      "Leader_Score_V2": 92.05527638190955,
       "Leverage": 2.0,
       "Close": 78.75,
       "ATR20": 2.0204999999999984,
