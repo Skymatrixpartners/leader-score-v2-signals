@@ -1,0 +1,104 @@
+{
+  "date": "2026-07-15",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 754.81,
+    "sma50": 743.34,
+    "sma200": 695.85,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "PYPL",
+      "Band": "B",
+      "Leader_Score_V2": 99.91457286432161,
+      "Leverage": 1.0,
+      "Close": 55.511,
+      "ATR20": 1.8592750000000007,
+      "Sector": "SERVICES-BUSINESS SERVICES, NEC"
+    },
+    {
+      "Ticker": "BBY",
+      "Band": "A",
+      "Leader_Score_V2": 93.63316582914574,
+      "Leverage": 2.0,
+      "Close": 85.37,
+      "ATR20": 2.575245,
+      "Sector": "Consumer Discretionary"
+    },
+    {
+      "Ticker": "IVZ",
+      "Band": "A",
+      "Leader_Score_V2": 93.5175879396985,
+      "Leverage": 2.0,
+      "Close": 30.3,
+      "ATR20": 1.0357450000000001,
+      "Sector": "INVESTMENT ADVICE"
+    },
+    {
+      "Ticker": "NDAQ",
+      "Band": "A",
+      "Leader_Score_V2": 93.43718592964825,
+      "Leverage": 2.0,
+      "Close": 91.36,
+      "ATR20": 3.034485000000001,
+      "Sector": "SECURITY & COMMODITY BROKERS, DEALERS, EXCHANGES & SERVICES"
+    },
+    {
+      "Ticker": "KMX",
+      "Band": "A",
+      "Leader_Score_V2": 93.29648241206029,
+      "Leverage": 2.0,
+      "Close": 58.94,
+      "ATR20": 2.554665,
+      "Sector": "RETAIL-AUTO DEALERS & GASOLINE STATIONS"
+    },
+    {
+      "Ticker": "AVTR",
+      "Band": "A",
+      "Leader_Score_V2": 92.79899497487439,
+      "Leverage": 2.0,
+      "Close": 11.2,
+      "ATR20": 0.43900000000000017,
+      "Sector": "LABORATORY ANALYTICAL INSTRUMENTS"
+    },
+    {
+      "Ticker": "KKR",
+      "Band": "A",
+      "Leader_Score_V2": 92.30150753768844,
+      "Leverage": 2.0,
+      "Close": 100.95,
+      "ATR20": 3.4096949999999993,
+      "Sector": "INVESTMENT ADVICE"
+    },
+    {
+      "Ticker": "RHI",
+      "Band": "A",
+      "Leader_Score_V2": 92.23115577889448,
+      "Leverage": 2.0,
+      "Close": 36.7,
+      "ATR20": 1.6767499999999997,
+      "Sector": "SERVICES-HELP SUPPLY SERVICES"
+    },
+    {
+      "Ticker": "CRBG",
+      "Band": "A",
+      "Leader_Score_V2": 92.21608040201005,
+      "Leverage": 2.0,
+      "Close": 31.87,
+      "ATR20": 0.8489999999999999,
+      "Sector": "LIFE INSURANCE"
+    },
+    {
+      "Ticker": "SF",
+      "Band": "A",
+      "Leader_Score_V2": 92.06030150753769,
+      "Leverage": 2.0,
+      "Close": 78.75,
+      "ATR20": 2.0204999999999984,
+      "Sector": "SECURITY BROKERS, DEALERS & FLOTATION COMPANIES"
+    }
+  ]
+}
