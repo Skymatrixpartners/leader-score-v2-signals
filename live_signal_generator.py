@@ -37,6 +37,7 @@ import pandas as pd
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
+import threading
 
 # Enable flushing of output for real-time logging
 import builtins
@@ -44,6 +45,21 @@ _print = builtins.print
 def print(*args, **kwargs):
     kwargs.setdefault('flush', True)
     _print(*args, **kwargs)
+
+# ---------------------------------------------------------------------------
+# Global rate limiter (ensure max 1 request per RATE_LIMIT seconds across ALL workers)
+# ---------------------------------------------------------------------------
+_rate_limit_lock = threading.Lock()
+_last_request_time = 0.0
+
+def _enforce_rate_limit(delay: float):
+    """Enforce global rate limit across all threads."""
+    global _last_request_time
+    with _rate_limit_lock:
+        now = time.time()
+        if now - _last_request_time < delay:
+            time.sleep(delay - (now - _last_request_time))
+        _last_request_time = time.time()
 
 # ---------------------------------------------------------------------------
 # Config
@@ -92,6 +108,7 @@ WEIGHTS = {
 def _request(url: str, params: dict, retries: int = 4) -> dict:
     for attempt in range(1, retries + 1):
         try:
+            _enforce_rate_limit(RATE_LIMIT)  # Global rate limit
             r = requests.get(url, params=params, timeout=30)
             r.raise_for_status()
             return r.json()
@@ -313,8 +330,8 @@ def parse_args() -> argparse.Namespace:
                    help="Universe CSV with ticker,sector columns")
     p.add_argument("--lookback",  type=int, default=LOOKBACK_DAYS,
                    help="Calendar days of history to fetch (default: 60)")
-    p.add_argument("--workers",   type=int, default=8,
-                   help="Parallel API fetch workers (default: 8)")
+    p.add_argument("--workers",   type=int, default=MAX_WORKERS,
+                   help=f"Parallel API fetch workers (default: {MAX_WORKERS})")
     p.add_argument("--top-n",     type=int, default=10,
                    help="Max signals to emit (default: 10)")
     p.add_argument("--min-score", type=float, default=None,
@@ -403,7 +420,6 @@ def main() -> None:
     def _fetch_one(ticker: str) -> pd.DataFrame | None:
         try:
             bars = fetch_daily_bars(ticker, fetch_start, fetch_end)
-            time.sleep(RATE_LIMIT)
             if bars.empty:
                 return None
             return compute_ticker_features(ticker, sectors.get(ticker, ""), bars, spy_df)
