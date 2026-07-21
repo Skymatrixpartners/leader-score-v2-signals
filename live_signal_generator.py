@@ -63,8 +63,8 @@ UNIVERSE_FILE  = ROOT / "data" / "russell_1000.csv"
 OUTPUT_DIR     = ROOT / "output" / "signals"
 LOOKBACK_DAYS  = 90    # fetch 90 calendar days -> ~63 trading days -> covers RS10+ATR20+warmup
 SPY_LOOKBACK   = 310   # fetch 310 calendar days for SPY -> covers SMA50 + SMA200
-RATE_LIMIT     = 0.12  # seconds between API calls
-MAX_WORKERS    = 8
+RATE_LIMIT     = 0.5   # seconds between API calls (increased from 0.12 to reduce 429 rate limit errors)
+MAX_WORKERS    = 4     # reduced from 8 to reduce concurrent requests and 429 errors
 
 # Score bands (backtest-validated)
 BAND_A_LO, BAND_A_HI = 92.0,  95.0   # 2x  — high-conviction zone
@@ -96,7 +96,11 @@ def _request(url: str, params: dict, retries: int = 4) -> dict:
             r.raise_for_status()
             return r.json()
         except requests.RequestException as exc:
-            sleep = min(2 ** attempt, 30)
+            # For 429 (rate limit), use longer backoff
+            if "429" in str(exc):
+                sleep = min(5 * (2 ** attempt), 120)  # Longer backoff for rate limits
+            else:
+                sleep = min(2 ** attempt, 30)
             print(f"  API retry {attempt}/{retries}: {exc}", flush=True)
             time.sleep(sleep)
     return {}
