@@ -411,10 +411,10 @@ def main() -> None:
     start_time = time.time()
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = {pool.submit(_fetch_one, t): t for t in tickers}
-        for fut in as_completed(futures, timeout=90):  # timeout per batch
+        for fut in as_completed(futures):  # No timeout - let all futures complete
             completed += 1
             try:
-                row = fut.result(timeout=60)
+                row = fut.result(timeout=45)  # 45 sec per ticker
                 if row is not None and not row.empty:
                     with _lock:
                         all_rows.append(row)
