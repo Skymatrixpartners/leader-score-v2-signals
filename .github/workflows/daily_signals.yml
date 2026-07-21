@@ -14,7 +14,7 @@ on:
 jobs:
   generate-signals:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     permissions:
       contents: write
 
@@ -33,26 +33,34 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Debug API key
+      - name: Debug API key and environment
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
         run: |
-          if [ -n "$MASSIVE_API_KEY" ]; then
-            echo "API key SET length=${#MASSIVE_API_KEY} first4=${MASSIVE_API_KEY:0:4}"
-          else
-            echo "API key NOT SET"
-          fi
+          echo "=== Signal Generation Starting ==="
+          echo "Time: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          echo "API key length: ${#MASSIVE_API_KEY}"
+          [ -z "$MASSIVE_API_KEY" ] && echo "❌ ERROR: API key NOT SET" && exit 1
+          echo "✓ API key configured"
+          [ -f "data/russell_1000.csv" ] && echo "✓ Universe file found ($(wc -l < data/russell_1000.csv) tickers)"
+          echo "=== Starting signal generation ==="
 
       - name: Generate signals
+        timeout-minutes: 55
         env:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_API_URL: https://api.massive.com/v2
         run: |
           if [ -n "${{ github.event.inputs.date }}" ]; then
-            python live_signal_generator.py --date "${{ github.event.inputs.date }}"
+            timeout 50m python live_signal_generator.py --date "${{ github.event.inputs.date }}" || EXIT_CODE=$?
           else
-            python live_signal_generator.py
+            timeout 50m python live_signal_generator.py || EXIT_CODE=$?
           fi
+          if [ $? -eq 124 ]; then
+            echo "❌ Script execution timeout after 50 minutes"
+            exit 1
+          fi
+          echo "✓ Signal generation completed at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
 
       - name: Upload signals artifact
         uses: actions/upload-artifact@v4

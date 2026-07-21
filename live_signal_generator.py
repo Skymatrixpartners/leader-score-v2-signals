@@ -30,12 +30,20 @@ import sys
 import time
 from datetime import date, timedelta
 from pathlib import Path
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
+
+# Enable flushing of output for real-time logging
+import builtins
+_print = builtins.print
+def print(*args, **kwargs):
+    kwargs.setdefault('flush', True)
+    _print(*args, **kwargs)
 
 # ---------------------------------------------------------------------------
 # Config
@@ -99,10 +107,12 @@ def fetch_daily_bars(ticker: str, start: date, end: date) -> pd.DataFrame:
     url = f"{BASE_URL}/aggs/ticker/{ticker}/range/1/day/{start:%Y-%m-%d}/{end:%Y-%m-%d}"
     params = {"adjusted": "true", "sort": "asc", "limit": 5000, "apiKey": API_KEY}
     rows, next_url = [], url
-    while next_url:
+    page_count = 0
+    while next_url and page_count < 5:  # Limit pagination to prevent infinite loops
         payload = _request(next_url, params)
         rows.extend(payload.get("results", []))
         next_url = payload.get("next_url")
+        page_count += 1
         if next_url:
             params = {"apiKey": API_KEY}
             time.sleep(RATE_LIMIT)
@@ -381,37 +391,47 @@ def main() -> None:
 
     # Fetch all tickers in parallel
     print(f"\nFetching {len(tickers)} tickers ({args.workers} workers) ...")
+    print(f"  Start time: {datetime.utcnow().strftime('%H:%M:%S UTC')}", flush=True)
     all_rows: list[pd.DataFrame] = []
     failed = 0
     _lock = __import__("threading").Lock()
 
     def _fetch_one(ticker: str) -> pd.DataFrame | None:
-        bars = fetch_daily_bars(ticker, fetch_start, fetch_end)
-        time.sleep(RATE_LIMIT)
-        if bars.empty:
+        try:
+            bars = fetch_daily_bars(ticker, fetch_start, fetch_end)
+            time.sleep(RATE_LIMIT)
+            if bars.empty:
+                return None
+            return compute_ticker_features(ticker, sectors.get(ticker, ""), bars, spy_df)
+        except Exception as e:
+            print(f"  ⚠ {ticker}: {type(e).__name__}: {str(e)[:80]}", flush=True)
             return None
-        return compute_ticker_features(ticker, sectors.get(ticker, ""), bars, spy_df)
 
     completed = 0
+    start_time = time.time()
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = {pool.submit(_fetch_one, t): t for t in tickers}
-        for fut in as_completed(futures):
+        for fut in as_completed(futures, timeout=90):  # timeout per batch
             completed += 1
             try:
-                row = fut.result()
+                row = fut.result(timeout=60)
                 if row is not None and not row.empty:
                     with _lock:
                         all_rows.append(row)
                 else:
                     with _lock:
                         failed += 1
-            except Exception:
+            except Exception as e:
                 with _lock:
                     failed += 1
+                print(f"  ✗ Ticker result error: {e}", flush=True)
+            
             if completed % 100 == 0:
-                print(f"  {completed}/{len(tickers)} fetched  ({failed} failed)", flush=True)
+                elapsed = time.time() - start_time
+                print(f"  [{datetime.utcnow().strftime('%H:%M:%S')}] {completed}/{len(tickers)} fetched  ({failed} failed)  [{elapsed:.0f}s elapsed]", flush=True)
 
-    print(f"  Done. {len(all_rows)} tickers with valid data, {failed} failed.")
+    elapsed_total = time.time() - start_time
+    print(f"  Done. {len(all_rows)} tickers with valid data, {failed} failed. ({elapsed_total:.1f}s total)", flush=True)
 
     if not all_rows:
         print("ERROR: No ticker data retrieved.")
