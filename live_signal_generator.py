@@ -1,9 +1,11 @@
 """
 Live Signal Generator — Leader Score V2
 ========================================
-Runs at ~3:25 PM ET daily. Fetches the last 60 days of daily bars
-for all Russell 1000 tickers, recomputes all features + Leader_Score_V2,
-and outputs today's BUY signals to output/live_signals_YYYY-MM-DD.csv.
+Runs at ~3:25 PM ET daily. Fetches daily bars for all Russell 1000 tickers
+via the grouped-daily endpoint (one API call per calendar day, covering every
+US ticker at once — not one call per ticker), recomputes all features +
+Leader_Score_V2, and outputs today's BUY signals to
+output/live_signals_YYYY-MM-DD.csv.
 
 No local data files required — all data is fetched via the Massive API.
 
@@ -35,7 +37,6 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import requests
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
 import threading
 
@@ -79,8 +80,7 @@ UNIVERSE_FILE  = ROOT / "data" / "russell_1000.csv"
 OUTPUT_DIR     = ROOT / "output" / "signals"
 LOOKBACK_DAYS  = 90    # fetch 90 calendar days -> ~63 trading days -> covers RS10+ATR20+warmup
 SPY_LOOKBACK   = 310   # fetch 310 calendar days for SPY -> covers SMA50 + SMA200
-RATE_LIMIT     = 0.5   # seconds between API calls (increased from 0.12 to reduce 429 rate limit errors)
-MAX_WORKERS    = 4     # reduced from 8 to reduce concurrent requests and 429 errors
+RATE_LIMIT     = 0.3   # seconds between grouped-daily API calls (one call covers ALL tickers)
 
 # Score bands (backtest-validated)
 BAND_A_LO, BAND_A_HI = 92.0,  95.0   # 2x  — high-conviction zone
@@ -123,26 +123,48 @@ def _request(url: str, params: dict, retries: int = 4) -> dict:
     return {}
 
 
-def fetch_daily_bars(ticker: str, start: date, end: date) -> pd.DataFrame:
-    """Fetch daily OHLCV from Massive API. Returns empty DataFrame on failure."""
-    url = f"{BASE_URL}/aggs/ticker/{ticker}/range/1/day/{start:%Y-%m-%d}/{end:%Y-%m-%d}"
-    params = {"adjusted": "true", "sort": "asc", "limit": 5000, "apiKey": API_KEY}
-    rows, next_url = [], url
-    page_count = 0
-    while next_url and page_count < 5:  # Limit pagination to prevent infinite loops
-        payload = _request(next_url, params)
-        rows.extend(payload.get("results", []))
-        next_url = payload.get("next_url")
-        page_count += 1
-        if next_url:
-            params = {"apiKey": API_KEY}
-            time.sleep(RATE_LIMIT)
+def fetch_grouped_daily(d: date) -> pd.DataFrame:
+    """
+    Fetch OHLCV for EVERY US ticker on a single date in one API call.
+    Returns empty DataFrame on weekends/holidays (no results) or failure.
+    """
+    url = f"{BASE_URL}/aggs/grouped/locale/us/market/stocks/{d:%Y-%m-%d}"
+    payload = _request(url, {"adjusted": "true", "apiKey": API_KEY})
+    rows = payload.get("results", [])
     if not rows:
         return pd.DataFrame()
     df = pd.DataFrame(rows)
-    df["Date"]   = pd.to_datetime(df["t"], unit="ms", utc=True).dt.tz_localize(None).dt.normalize()
-    df = df.rename(columns={"o":"Open","h":"High","l":"Low","c":"Close","v":"Volume"})
-    return df[["Date","Open","High","Low","Close","Volume"]].sort_values("Date").reset_index(drop=True)
+    df["Date"] = pd.to_datetime(df["t"], unit="ms", utc=True).dt.tz_localize(None).dt.normalize()
+    df = df.rename(columns={"T": "Ticker", "o": "Open", "h": "High", "l": "Low", "c": "Close", "v": "Volume"})
+    return df[["Ticker", "Date", "Open", "High", "Low", "Close", "Volume"]]
+
+
+def fetch_bars_for_universe(tickers: set[str], start: date, end: date) -> dict[str, pd.DataFrame]:
+    """
+    Fetch daily OHLCV for `tickers` over [start, end] via the grouped-daily
+    endpoint — one API call per calendar weekday (covers every ticker at
+    once), instead of one call per ticker. Returns {ticker: sorted DataFrame}.
+    """
+    frames = []
+    d = start
+    n_days = (end - start).days + 1
+    print(f"  Fetching grouped daily bars: {start} to {end} ({n_days} calendar days) ...", flush=True)
+    fetched = 0
+    while d <= end:
+        if d.weekday() < 5:  # skip weekends; holidays just come back empty
+            day_df = fetch_grouped_daily(d)
+            if not day_df.empty:
+                frames.append(day_df[day_df["Ticker"].isin(tickers)])
+                fetched += 1
+        d += timedelta(days=1)
+    print(f"  Grouped fetch done: {fetched} trading days retrieved.", flush=True)
+    if not frames:
+        return {}
+    combined = pd.concat(frames, ignore_index=True)
+    return {
+        ticker: group.sort_values("Date").reset_index(drop=True)
+        for ticker, group in combined.groupby("Ticker")
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -330,8 +352,6 @@ def parse_args() -> argparse.Namespace:
                    help="Universe CSV with ticker,sector columns")
     p.add_argument("--lookback",  type=int, default=LOOKBACK_DAYS,
                    help="Calendar days of history to fetch (default: 60)")
-    p.add_argument("--workers",   type=int, default=MAX_WORKERS,
-                   help=f"Parallel API fetch workers (default: {MAX_WORKERS})")
     p.add_argument("--top-n",     type=int, default=10,
                    help="Max signals to emit (default: 10)")
     p.add_argument("--min-score", type=float, default=None,
@@ -380,24 +400,20 @@ def main() -> None:
     sectors  = dict(zip(universe["ticker"].str.upper(), universe.get("sector", "")))
     print(f"  Universe    : {len(tickers)} tickers from {universe_path.name}")
 
-    # Fetch SPY first (needed for RS calculation)
-    print(f"\nFetching SPY ({fetch_start} to {fetch_end}) ...")
-    spy_df = fetch_daily_bars("SPY", fetch_start, fetch_end)
+    # Single grouped-daily fetch covers SPY + the whole universe over the
+    # longest lookback we need (SPY_LOOKBACK, for SMA200), one API call per
+    # calendar weekday instead of one call per ticker.
+    spy_fetch_start = signal_date - timedelta(days=SPY_LOOKBACK)
+    overall_start = min(fetch_start, spy_fetch_start)
+    bars_by_ticker = fetch_bars_for_universe(set(tickers) | {"SPY"}, overall_start, fetch_end)
+
+    spy_df = bars_by_ticker.get("SPY", pd.DataFrame())
     if spy_df.empty or len(spy_df) < 10:
         print("ERROR: Could not fetch SPY data.")
         sys.exit(1)
     print(f"  SPY rows: {len(spy_df)}")
 
-    # Regime (uses full 310-day SPY for SMA200)
-    spy_fetch_start = signal_date - timedelta(days=SPY_LOOKBACK)
-    if spy_fetch_start < fetch_start:
-        print(f"Fetching extended SPY history ({spy_fetch_start} to {fetch_end}) for SMA200 ...")
-        spy_df_regime = fetch_daily_bars("SPY", spy_fetch_start, fetch_end)
-        if spy_df_regime.empty:
-            spy_df_regime = spy_df
-    else:
-        spy_df_regime = spy_df
-    regime_info = build_spy_regime(spy_df_regime, signal_date)
+    regime_info = build_spy_regime(spy_df, signal_date)
     regime = regime_info["regime"] if not args.no_regime_gate else "BULL"
     print(f"\n  SPY Close : {regime_info['spy_close']}")
     print(f"  SMA50     : {regime_info['sma50']}")
@@ -410,48 +426,27 @@ def main() -> None:
         _save_and_print(signals, signal_date, regime_info, args)
         return
 
-    # Fetch all tickers in parallel
-    print(f"\nFetching {len(tickers)} tickers ({args.workers} workers) ...")
-    print(f"  Start time: {datetime.utcnow().strftime('%H:%M:%S UTC')}", flush=True)
+    # Compute features for every ticker from the already-fetched bars
+    print(f"\nComputing features for {len(tickers)} tickers ...", flush=True)
     all_rows: list[pd.DataFrame] = []
     failed = 0
-    _lock = __import__("threading").Lock()
-
-    def _fetch_one(ticker: str) -> pd.DataFrame | None:
+    for ticker in tickers:
+        bars = bars_by_ticker.get(ticker, pd.DataFrame())
+        if bars.empty:
+            failed += 1
+            continue
         try:
-            bars = fetch_daily_bars(ticker, fetch_start, fetch_end)
-            if bars.empty:
-                return None
-            return compute_ticker_features(ticker, sectors.get(ticker, ""), bars, spy_df)
+            row = compute_ticker_features(ticker, sectors.get(ticker, ""), bars, spy_df)
         except Exception as e:
             print(f"  ⚠ {ticker}: {type(e).__name__}: {str(e)[:80]}", flush=True)
-            return None
+            failed += 1
+            continue
+        if row is not None and not row.empty:
+            all_rows.append(row)
+        else:
+            failed += 1
 
-    completed = 0
-    start_time = time.time()
-    with ThreadPoolExecutor(max_workers=args.workers) as pool:
-        futures = {pool.submit(_fetch_one, t): t for t in tickers}
-        for fut in as_completed(futures):  # No timeout - let all futures complete
-            completed += 1
-            try:
-                row = fut.result(timeout=45)  # 45 sec per ticker
-                if row is not None and not row.empty:
-                    with _lock:
-                        all_rows.append(row)
-                else:
-                    with _lock:
-                        failed += 1
-            except Exception as e:
-                with _lock:
-                    failed += 1
-                print(f"  ✗ Ticker result error: {e}", flush=True)
-            
-            if completed % 100 == 0:
-                elapsed = time.time() - start_time
-                print(f"  [{datetime.utcnow().strftime('%H:%M:%S')}] {completed}/{len(tickers)} fetched  ({failed} failed)  [{elapsed:.0f}s elapsed]", flush=True)
-
-    elapsed_total = time.time() - start_time
-    print(f"  Done. {len(all_rows)} tickers with valid data, {failed} failed. ({elapsed_total:.1f}s total)", flush=True)
+    print(f"  Done. {len(all_rows)} tickers with valid data, {failed} failed.", flush=True)
 
     if not all_rows:
         print("ERROR: No ticker data retrieved.")
