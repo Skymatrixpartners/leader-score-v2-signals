@@ -3,102 +3,93 @@
   "regime": "NEUTRAL",
   "spy": {
     "regime": "NEUTRAL",
-    "spy_close": 740.86,
-    "sma50": 744.86,
-    "sma200": 699.23,
+    "spy_close": 739.09,
+    "sma50": 744.87,
+    "sma200": 698.49,
     "spy_bull": "False",
     "spy_bear": "False"
   },
   "signals": [
     {
-      "Ticker": "IQV",
+      "Ticker": "CLF",
       "Band": "B",
-      "Leader_Score_V2": 98.26458752515092,
+      "Leader_Score_V2": 98.44064386317909,
       "Leverage": 1.0,
-      "Close": 242.94,
-      "ATR20": 7.99092,
-      "Sector": "Healthcare"
-    },
-    {
-      "Ticker": "HPQ",
-      "Band": "A",
-      "Leader_Score_V2": 94.97987927565393,
-      "Leverage": 2.0,
-      "Close": 28.29,
-      "ATR20": 0.9825700000000002,
-      "Sector": "COMPUTER & OFFICE EQUIPMENT"
-    },
-    {
-      "Ticker": "CTSH",
-      "Band": "A",
-      "Leader_Score_V2": 94.28068410462775,
-      "Leverage": 2.0,
-      "Close": 50.31,
-      "ATR20": 2.0697100000000006,
-      "Sector": "SERVICES-COMPUTER PROGRAMMING SERVICES"
-    },
-    {
-      "Ticker": "EPAM",
-      "Band": "A",
-      "Leader_Score_V2": 94.08953722334005,
-      "Leverage": 2.0,
-      "Close": 100.4,
-      "ATR20": 4.637395,
-      "Sector": "SERVICES-COMPUTER PROGRAMMING SERVICES"
-    },
-    {
-      "Ticker": "HCA",
-      "Band": "A",
-      "Leader_Score_V2": 94.03923541247485,
-      "Leverage": 2.0,
-      "Close": 418.19,
-      "ATR20": 14.884215000000001,
-      "Sector": "SERVICES-GENERAL MEDICAL & SURGICAL HOSPITALS, NEC"
-    },
-    {
-      "Ticker": "UHS",
-      "Band": "A",
-      "Leader_Score_V2": 93.96378269617708,
-      "Leverage": 2.0,
-      "Close": 166.22,
-      "ATR20": 6.19461,
-      "Sector": "SERVICES-GENERAL MEDICAL & SURGICAL HOSPITALS, NEC"
-    },
-    {
-      "Ticker": "NUE",
-      "Band": "A",
-      "Leader_Score_V2": 93.94366197183099,
-      "Leverage": 2.0,
-      "Close": 265.62,
-      "ATR20": 7.122244999999995,
+      "Close": 12.25,
+      "ATR20": 0.6153549999999997,
       "Sector": "Materials"
     },
     {
-      "Ticker": "INCY",
-      "Band": "A",
-      "Leader_Score_V2": 93.85814889336015,
-      "Leverage": 2.0,
-      "Close": 129.93,
-      "ATR20": 3.742825,
-      "Sector": "Healthcare"
+      "Ticker": "RNG",
+      "Band": "B",
+      "Leader_Score_V2": 98.09356136820927,
+      "Leverage": 1.0,
+      "Close": 53.7,
+      "ATR20": 2.892744999999999,
+      "Sector": "SERVICES-COMPUTER PROCESSING & DATA PREPARATION"
     },
     {
-      "Ticker": "WEX",
+      "Ticker": "IP",
       "Band": "A",
-      "Leader_Score_V2": 93.77766599597587,
+      "Leader_Score_V2": 94.78873239436619,
       "Leverage": 2.0,
-      "Close": 182.88,
-      "ATR20": 6.957580000000002,
-      "Sector": "SERVICES-BUSINESS SERVICES, NEC"
+      "Close": 42.41,
+      "ATR20": 1.4432499999999986,
+      "Sector": "PAPER MILLS"
     },
     {
-      "Ticker": "BF.B",
+      "Ticker": "AVTR",
       "Band": "A",
-      "Leader_Score_V2": 92.82193158953721,
+      "Leader_Score_V2": 94.70824949698189,
       "Leverage": 2.0,
-      "Close": 28.9,
-      "ATR20": 0.9568950000000003,
-      "Sector": "BEVERAGES"
+      "Close": 11.76,
+      "ATR20": 0.4963000000000002,
+      "Sector": "LABORATORY ANALYTICAL INSTRUMENTS"
+    },
+    {
+      "Ticker": "BAH",
+      "Band": "A",
+      "Leader_Score_V2": 94.6579476861167,
+      "Leverage": 2.0,
+      "Close": 71.64,
+      "ATR20": 2.8445000000000005,
+      "Sector": "SERVICES-MANAGEMENT CONSULTING SERVICES"
+    },
+    {
+      "Ticker": "MMM",
+      "Band": "A",
+      "Leader_Score_V2": 94.35110663983905,
+      "Leverage": 2.0,
+      "Close": 178.23,
+      "ATR20": 4.746744999999999,
+      "Sector": "Industrials"
+    },
+    {
+      "Ticker": "ALLE",
+      "Band": "A",
+      "Leader_Score_V2": 94.25050301810866,
+      "Leverage": 2.0,
+      "Close": 158.14,
+      "ATR20": 4.487395000000002,
+      "Sector": "SERVICES-DETECTIVE, GUARD & ARMORED CAR SERVICES"
+    },
+    {
+      "Ticker": "PKG",
+      "Band": "A",
+      "Leader_Score_V2": 93.99899396378271,
+      "Leverage": 2.0,
+      "Close": 252.37,
+      "ATR20": 7.10193,
+      "Sector": "Materials"
+    },
+    {
+      "Ticker": "CPRT",
+      "Band": "A",
+      "Leader_Score_V2": 93.3903420523139,
+      "Leverage": 2.0,
+      "Close": 29.79,
+      "ATR20": 1.0352499999999998,
+      "Sector": "RETAIL-AUTO DEALERS & GASOLINE STATIONS"
     }
   ]
 }
