@@ -1,0 +1,104 @@
+{
+  "date": "2026-07-30",
+  "regime": "NEUTRAL",
+  "spy": {
+    "regime": "NEUTRAL",
+    "spy_close": 729.46,
+    "sma50": 744.66,
+    "sma200": 699.52,
+    "spy_bull": "False",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "LAD",
+      "Band": "B",
+      "Leader_Score_V2": 98.66700201207244,
+      "Leverage": 1.0,
+      "Close": 427.48,
+      "ATR20": 15.466194999999994,
+      "Sector": "RETAIL-AUTO DEALERS & GASOLINE STATIONS"
+    },
+    {
+      "Ticker": "MANH",
+      "Band": "B",
+      "Leader_Score_V2": 98.4456740442656,
+      "Leverage": 1.0,
+      "Close": 204.02,
+      "ATR20": 9.837499999999997,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "AVTR",
+      "Band": "B",
+      "Leader_Score_V2": 98.31991951710262,
+      "Leverage": 1.0,
+      "Close": 14.38,
+      "ATR20": 0.5988,
+      "Sector": "LABORATORY ANALYTICAL INSTRUMENTS"
+    },
+    {
+      "Ticker": "GRMN",
+      "Band": "B",
+      "Leader_Score_V2": 98.24446680080484,
+      "Leverage": 1.0,
+      "Close": 294.83,
+      "ATR20": 8.675495000000003,
+      "Sector": "SEARCH, DETECTION, NAVIGATION, GUIDANCE, AERONAUTICAL SYS"
+    },
+    {
+      "Ticker": "WDAY",
+      "Band": "A",
+      "Leader_Score_V2": 94.82897384305834,
+      "Leverage": 2.0,
+      "Close": 168.01,
+      "ATR20": 9.015995,
+      "Sector": "Software & Services"
+    },
+    {
+      "Ticker": "MORN",
+      "Band": "A",
+      "Leader_Score_V2": 94.1800804828974,
+      "Leverage": 2.0,
+      "Close": 198.66,
+      "ATR20": 7.681160000000001,
+      "Sector": "INVESTMENT ADVICE"
+    },
+    {
+      "Ticker": "IQV",
+      "Band": "A",
+      "Leader_Score_V2": 93.73239436619718,
+      "Leverage": 2.0,
+      "Close": 247.56,
+      "ATR20": 8.26567,
+      "Sector": "Healthcare"
+    },
+    {
+      "Ticker": "EXPE",
+      "Band": "A",
+      "Leader_Score_V2": 93.2042253521127,
+      "Leverage": 2.0,
+      "Close": 304.27,
+      "ATR20": 11.003589999999999,
+      "Sector": "Consumer Discretionary"
+    },
+    {
+      "Ticker": "BSY",
+      "Band": "A",
+      "Leader_Score_V2": 92.86720321931588,
+      "Leverage": 2.0,
+      "Close": 36.96,
+      "ATR20": 1.4862499999999996,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "G",
+      "Band": "A",
+      "Leader_Score_V2": 92.66599597585514,
+      "Leverage": 2.0,
+      "Close": 36.71,
+      "ATR20": 1.2637999999999998,
+      "Sector": "SERVICES-MANAGEMENT CONSULTING SERVICES"
+    }
+  ]
+}
