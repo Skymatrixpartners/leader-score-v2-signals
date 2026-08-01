@@ -1,0 +1,95 @@
+{
+  "date": "2026-07-29",
+  "regime": "NEUTRAL",
+  "spy": {
+    "regime": "NEUTRAL",
+    "spy_close": 739.09,
+    "sma50": 744.87,
+    "sma200": 698.49,
+    "spy_bull": "False",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "CLF",
+      "Band": "B",
+      "Leader_Score_V2": 98.44064386317909,
+      "Leverage": 1.0,
+      "Close": 12.25,
+      "ATR20": 0.6153549999999997,
+      "Sector": "Materials"
+    },
+    {
+      "Ticker": "RNG",
+      "Band": "B",
+      "Leader_Score_V2": 98.09356136820927,
+      "Leverage": 1.0,
+      "Close": 53.7,
+      "ATR20": 2.892744999999999,
+      "Sector": "SERVICES-COMPUTER PROCESSING & DATA PREPARATION"
+    },
+    {
+      "Ticker": "IP",
+      "Band": "A",
+      "Leader_Score_V2": 94.78873239436619,
+      "Leverage": 2.0,
+      "Close": 42.41,
+      "ATR20": 1.4432499999999986,
+      "Sector": "PAPER MILLS"
+    },
+    {
+      "Ticker": "AVTR",
+      "Band": "A",
+      "Leader_Score_V2": 94.70824949698189,
+      "Leverage": 2.0,
+      "Close": 11.76,
+      "ATR20": 0.4963000000000002,
+      "Sector": "LABORATORY ANALYTICAL INSTRUMENTS"
+    },
+    {
+      "Ticker": "BAH",
+      "Band": "A",
+      "Leader_Score_V2": 94.6579476861167,
+      "Leverage": 2.0,
+      "Close": 71.64,
+      "ATR20": 2.8445000000000005,
+      "Sector": "SERVICES-MANAGEMENT CONSULTING SERVICES"
+    },
+    {
+      "Ticker": "MMM",
+      "Band": "A",
+      "Leader_Score_V2": 94.35110663983905,
+      "Leverage": 2.0,
+      "Close": 178.23,
+      "ATR20": 4.746744999999999,
+      "Sector": "Industrials"
+    },
+    {
+      "Ticker": "ALLE",
+      "Band": "A",
+      "Leader_Score_V2": 94.25050301810866,
+      "Leverage": 2.0,
+      "Close": 158.14,
+      "ATR20": 4.487395000000002,
+      "Sector": "SERVICES-DETECTIVE, GUARD & ARMORED CAR SERVICES"
+    },
+    {
+      "Ticker": "PKG",
+      "Band": "A",
+      "Leader_Score_V2": 93.99899396378271,
+      "Leverage": 2.0,
+      "Close": 252.37,
+      "ATR20": 7.10193,
+      "Sector": "Materials"
+    },
+    {
+      "Ticker": "CPRT",
+      "Band": "A",
+      "Leader_Score_V2": 93.3903420523139,
+      "Leverage": 2.0,
+      "Close": 29.79,
+      "ATR20": 1.0352499999999998,
+      "Sector": "RETAIL-AUTO DEALERS & GASOLINE STATIONS"
+    }
+  ]
+}
