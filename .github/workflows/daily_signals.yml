@@ -51,13 +51,17 @@ jobs:
           MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
           MASSIVE_API_URL: https://api.massive.com/v2
         run: |
+          EXIT_CODE=0
           if [ -n "${{ github.event.inputs.date }}" ]; then
             timeout 50m python live_signal_generator.py --date "${{ github.event.inputs.date }}" || EXIT_CODE=$?
           else
             timeout 50m python live_signal_generator.py || EXIT_CODE=$?
           fi
-          if [ $? -eq 124 ]; then
+          if [ "$EXIT_CODE" -eq 124 ]; then
             echo "❌ Script execution timeout after 50 minutes"
+            exit 1
+          elif [ "$EXIT_CODE" -ne 0 ]; then
+            echo "❌ Script failed with exit code $EXIT_CODE"
             exit 1
           fi
           echo "✓ Signal generation completed at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
@@ -74,6 +78,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add output/signals/ || true
+          git add output/signals/ data/bars_cache.csv || true
           git diff --cached --quiet || git commit -m "signals: $(date -u '+%Y-%m-%d')"
           git push || true

@@ -7,7 +7,10 @@ US ticker at once — not one call per ticker), recomputes all features +
 Leader_Score_V2, and outputs today's BUY signals to
 output/live_signals_YYYY-MM-DD.csv.
 
-No local data files required — all data is fetched via the Massive API.
+Bars are cached in data/bars_cache.csv (committed to the repo), so a warm
+run only needs to fetch the 1-2 days missing since the last run instead of
+the full ~310-day lookback — this keeps runtime well under a minute even
+on the API's rate-limited free tier.
 
 Usage
 -----
@@ -78,8 +81,10 @@ BASE_URL = os.getenv("MASSIVE_API_URL", "https://api.massive.com/v2").rstrip("/"
 
 UNIVERSE_FILE  = ROOT / "data" / "russell_1000.csv"
 OUTPUT_DIR     = ROOT / "output" / "signals"
+CACHE_FILE     = ROOT / "data" / "bars_cache.csv"
 LOOKBACK_DAYS  = 90    # fetch 90 calendar days -> ~63 trading days -> covers RS10+ATR20+warmup
 SPY_LOOKBACK   = 310   # fetch 310 calendar days for SPY -> covers SMA50 + SMA200
+CACHE_BUFFER_DAYS = 15 # extra days kept in the cache beyond SPY_LOOKBACK, as a trim margin
 RATE_LIMIT     = 0.3   # seconds between grouped-daily API calls (one call covers ALL tickers)
 
 # Score bands (backtest-validated)
@@ -139,31 +144,66 @@ def fetch_grouped_daily(d: date) -> pd.DataFrame:
     return df[["Ticker", "Date", "Open", "High", "Low", "Close", "Volume"]]
 
 
+def _weekdays(start: date, end: date) -> list[date]:
+    days = []
+    d = start
+    while d <= end:
+        if d.weekday() < 5:  # skip weekends; holidays just come back empty from the API
+            days.append(d)
+        d += timedelta(days=1)
+    return days
+
+
+def load_bars_cache() -> pd.DataFrame:
+    if not CACHE_FILE.exists():
+        return pd.DataFrame(columns=["Ticker", "Date", "Open", "High", "Low", "Close", "Volume"])
+    df = pd.read_csv(CACHE_FILE, parse_dates=["Date"])
+    return df
+
+
+def save_bars_cache(df: pd.DataFrame) -> None:
+    CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    df.sort_values(["Ticker", "Date"]).to_csv(CACHE_FILE, index=False)
+
+
 def fetch_bars_for_universe(tickers: set[str], start: date, end: date) -> dict[str, pd.DataFrame]:
     """
     Fetch daily OHLCV for `tickers` over [start, end] via the grouped-daily
-    endpoint — one API call per calendar weekday (covers every ticker at
-    once), instead of one call per ticker. Returns {ticker: sorted DataFrame}.
+    endpoint (one API call per calendar weekday covers every ticker at once),
+    backed by a repo-persisted rolling cache (data/bars_cache.csv) so only
+    days missing from the cache actually hit the API. On a warm cache this
+    is typically 1-2 calls instead of ~220, avoiding the free-tier rate-limit
+    death spiral that previously blew through the 50-minute job timeout.
     """
-    frames = []
-    d = start
-    n_days = (end - start).days + 1
-    print(f"  Fetching grouped daily bars: {start} to {end} ({n_days} calendar days) ...", flush=True)
-    fetched = 0
-    while d <= end:
-        if d.weekday() < 5:  # skip weekends; holidays just come back empty
-            day_df = fetch_grouped_daily(d)
-            if not day_df.empty:
-                frames.append(day_df[day_df["Ticker"].isin(tickers)])
-                fetched += 1
-        d += timedelta(days=1)
-    print(f"  Grouped fetch done: {fetched} trading days retrieved.", flush=True)
-    if not frames:
+    cache = load_bars_cache()
+    cache = cache[cache["Ticker"].isin(tickers)]
+    have_dates = set(cache["Date"].dt.date.unique()) if not cache.empty else set()
+
+    needed_days = [d for d in _weekdays(start, end) if d not in have_dates]
+    print(f"  Bars cache: {len(have_dates)} days cached, {len(needed_days)} new day(s) to fetch ...", flush=True)
+
+    new_frames = []
+    for d in needed_days:
+        day_df = fetch_grouped_daily(d)
+        if not day_df.empty:
+            new_frames.append(day_df[day_df["Ticker"].isin(tickers)])
+    print(f"  Grouped fetch done: {len(new_frames)}/{len(needed_days)} new trading day(s) retrieved.", flush=True)
+
+    if new_frames:
+        cache = pd.concat([cache] + new_frames, ignore_index=True)
+        cache = cache.drop_duplicates(subset=["Ticker", "Date"], keep="last")
+
+    # Keep the cache trimmed to a rolling window so it doesn't grow forever.
+    cutoff = pd.Timestamp(start) - pd.Timedelta(days=CACHE_BUFFER_DAYS)
+    cache = cache[cache["Date"] >= cutoff]
+    save_bars_cache(cache)
+
+    window = cache[(cache["Date"] >= pd.Timestamp(start)) & (cache["Date"] <= pd.Timestamp(end))]
+    if window.empty:
         return {}
-    combined = pd.concat(frames, ignore_index=True)
     return {
         ticker: group.sort_values("Date").reset_index(drop=True)
-        for ticker, group in combined.groupby("Ticker")
+        for ticker, group in window.groupby("Ticker")
     }
 
 
