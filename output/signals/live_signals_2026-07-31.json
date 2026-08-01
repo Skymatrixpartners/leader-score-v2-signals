@@ -1,0 +1,104 @@
+{
+  "date": "2026-07-31",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 747.03,
+    "sma50": 744.99,
+    "sma200": 700.39,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "MKTX",
+      "Band": "B",
+      "Leader_Score_V2": 99.26056338028168,
+      "Leverage": 1.0,
+      "Close": 162.3,
+      "ATR20": 5.09975165,
+      "Sector": "SECURITY BROKERS, DEALERS & FLOTATION COMPANIES"
+    },
+    {
+      "Ticker": "DXCM",
+      "Band": "A",
+      "Leader_Score_V2": 94.5271629778672,
+      "Leverage": 2.0,
+      "Close": 83.45,
+      "ATR20": 3.07179,
+      "Sector": "Healthcare"
+    },
+    {
+      "Ticker": "DLB",
+      "Band": "A",
+      "Leader_Score_V2": 94.42655935613682,
+      "Leverage": 2.0,
+      "Close": 58.81,
+      "ATR20": 1.8050000000000015,
+      "Sector": "PATENT OWNERS & LESSORS"
+    },
+    {
+      "Ticker": "REGN",
+      "Band": "A",
+      "Leader_Score_V2": 94.38631790744468,
+      "Leverage": 2.0,
+      "Close": 762.63,
+      "ATR20": 20.04647000000002,
+      "Sector": "Healthcare"
+    },
+    {
+      "Ticker": "DXC",
+      "Band": "A",
+      "Leader_Score_V2": 93.61167002012074,
+      "Leverage": 2.0,
+      "Close": 11.24,
+      "ATR20": 0.5987500000000001,
+      "Sector": "SERVICES-COMPUTER PROCESSING & DATA PREPARATION"
+    },
+    {
+      "Ticker": "EXLS",
+      "Band": "A",
+      "Leader_Score_V2": 92.88732394366198,
+      "Leverage": 2.0,
+      "Close": 33.93,
+      "ATR20": 1.41325,
+      "Sector": "SERVICES-BUSINESS SERVICES, NEC"
+    },
+    {
+      "Ticker": "CORT",
+      "Band": "A",
+      "Leader_Score_V2": 92.82696177062374,
+      "Leverage": 2.0,
+      "Close": 114.49,
+      "ATR20": 5.662104999999999,
+      "Sector": "PHARMACEUTICAL PREPARATIONS"
+    },
+    {
+      "Ticker": "WTW",
+      "Band": "A",
+      "Leader_Score_V2": 92.76659959758553,
+      "Leverage": 2.0,
+      "Close": 335.92,
+      "ATR20": 8.852990000000005,
+      "Sector": "INSURANCE AGENTS, BROKERS & SERVICE"
+    },
+    {
+      "Ticker": "BAX",
+      "Band": "A",
+      "Leader_Score_V2": 92.62072434607647,
+      "Leverage": 2.0,
+      "Close": 26.16,
+      "ATR20": 1.072295,
+      "Sector": "SURGICAL & MEDICAL INSTRUMENTS & APPARATUS"
+    },
+    {
+      "Ticker": "LAD",
+      "Band": "A",
+      "Leader_Score_V2": 92.32394366197184,
+      "Leverage": 2.0,
+      "Close": 385.42,
+      "ATR20": 16.98369499999999,
+      "Sector": "RETAIL-AUTO DEALERS & GASOLINE STATIONS"
+    }
+  ]
+}
