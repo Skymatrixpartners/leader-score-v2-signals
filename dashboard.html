@@ -547,18 +547,21 @@ async function loadSignals() {
   const fileDate = targetFile.replace('live_signals_','').replace('.csv','');
   document.getElementById('sig-date').textContent = fileDate;
 
-  // Pipeline status indicator
+  // Pipeline status indicator -- age-based, not exact-date-match, so a
+  // Friday signal viewed over the weekend (or Monday before the next
+  // trading day's run lands) doesn't falsely read as "Offline".
   const todayISO   = new Date().toISOString().slice(0,10);
-  const yesterday  = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  const ageDays    = Math.round((new Date(todayISO) - new Date(fileDate)) / 86400000);
   const dot        = document.getElementById('status-dot');
   const lbl        = document.getElementById('status-label');
   const sub        = document.getElementById('status-sub');
   const navDot     = document.getElementById('nav-status-dot');
-  if (fileDate === todayISO) {
+  if (ageDays <= 1) {
     dot.className='status-dot live'; lbl.className='status-label live'; lbl.textContent='Live';
     navDot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(38,222,129,.6);animation:pulse-dot 2s infinite;margin-left:auto;flex-shrink:0';
-    sub.textContent='Updated today';
-  } else if (fileDate === yesterday) {
+    sub.textContent = ageDays === 0 ? 'Updated today' : 'Last: ' + fileDate;
+  } else if (ageDays <= 3) {
+    // Covers the normal Fri -> Mon weekend gap (3 calendar days, no trading Sat/Sun)
     dot.className='status-dot delayed'; lbl.className='status-label delayed'; lbl.textContent='Delayed';
     navDot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--gold);margin-left:auto;flex-shrink:0';
     sub.textContent='Last: ' + fileDate;
