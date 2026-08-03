@@ -223,7 +223,7 @@
     </div>
     <div class="card">
       <div class="card-title">📋 Pre-Market Watchlist <span class="badge" id="sig-badge">Loading…</span>
-        <span style="margin-left:auto;font-size:11px;color:var(--muted)">Source: GitHub · <a id="sig-github-link" href="https://github.com/Skymatrixpartners/leader-score-v2-signals/tree/main/output/signals" target="_blank" style="color:var(--accent)">view repo</a></span>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted)">Source: GitHub · <a id="sig-github-link" href="https://github.com/Skymatrixpartners/leader-score-live-signals/tree/main/output/signals" target="_blank" style="color:var(--accent)">view repo</a></span>
       </div>
       <div id="sig-status" style="color:var(--muted);font-size:13px;padding:12px 0">Loading signals…</div>
       <div class="tbl-wrap" id="sig-tbl-wrap" style="display:none">
@@ -504,8 +504,8 @@ loadAll().catch(err=>{
 document.getElementById('loader').innerHTML=`<div style="color:var(--red);text-align:center;max-width:440px;padding:30px"><div style="font-size:40px;margin-bottom:14px">⚠️</div><div style="font-size:16px;font-weight:700;margin-bottom:10px">Could not load CSV files</div><div style="font-size:13px;color:#7b82a0;line-height:1.8">Open this file from a local web server.<br><br>Run in the <strong>leader_score_v2</strong> folder:<br><code style="background:rgba(255,255,255,.08);padding:3px 8px;border-radius:4px;font-size:12px">python -m http.server 8080</code><br><br>Then open: <strong>http://localhost:8080/dashboard.html</strong></div><div style="margin-top:14px;font-size:10px;color:#7b82a0">${err}</div></div>`;});
 
 // ── Live Signals ──────────────────────────────────────────────────────────────
-const GITHUB_RAW = 'https://raw.githubusercontent.com/Skymatrixpartners/leader-score-v2-signals/main/output/signals';
-const GITHUB_API = 'https://api.github.com/repos/Skymatrixpartners/leader-score-v2-signals/contents/output/signals';
+const GITHUB_RAW = 'https://raw.githubusercontent.com/Skymatrixpartners/leader-score-live-signals/main/output/signals';
+const GITHUB_API = 'https://api.github.com/repos/Skymatrixpartners/leader-score-live-signals/contents/output/signals';
 
 async function loadSignals() {
   // 1. List available signal files via GitHub API
@@ -527,7 +527,7 @@ async function loadSignals() {
   if (files.length > 0) {
     archiveEl.innerHTML = files.map((f,i) => {
       const d = f.replace('live_signals_','').replace('.csv','');
-      const url = `https://github.com/Skymatrixpartners/leader-score-v2-signals/blob/main/output/signals/${f}`;
+      const url = `https://github.com/Skymatrixpartners/leader-score-live-signals/blob/main/output/signals/${f}`;
       return `<a href="${url}" target="_blank" style="display:inline-block;margin:4px 6px 4px 0;padding:4px 12px;background:rgba(108,99,255,${i===0?'.25':'.08'});border-radius:6px;color:${i===0?'var(--accent)':'var(--muted)'};font-size:12px;text-decoration:none;font-family:var(--mono,'JetBrains Mono')">${d}</a>`;
     }).join('');
   } else {
@@ -567,12 +567,12 @@ async function loadSignals() {
     navDot.style.cssText='width:7px;height:7px;border-radius:50%;background:var(--red);margin-left:auto;flex-shrink:0';
     sub.textContent='Last: ' + fileDate;
   }
-  document.getElementById('sig-github-link').href = `https://github.com/Skymatrixpartners/leader-score-v2-signals/tree/main/output/signals`;
+  document.getElementById('sig-github-link').href = `https://github.com/Skymatrixpartners/leader-score-live-signals/tree/main/output/signals`;
 
   let csv = '';
   try {
     // Use GitHub API to get file content (avoids CORS issues with raw)
-    const apiUrl = `https://api.github.com/repos/Skymatrixpartners/leader-score-v2-signals/contents/output/signals/${targetFile}`;
+    const apiUrl = `https://api.github.com/repos/Skymatrixpartners/leader-score-live-signals/contents/output/signals/${targetFile}`;
     const r = await fetch(apiUrl);
     if (r.ok) {
       const meta = await r.json();
