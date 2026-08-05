@@ -1,0 +1,104 @@
+{
+  "date": "2026-08-04",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 771.33,
+    "sma50": 745.89,
+    "sma200": 701.39,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "W",
+      "Band": "B",
+      "Leader_Score_V2": 99.00905432595574,
+      "Leverage": 1.0,
+      "Close": 116.08,
+      "ATR20": 6.274104999999997,
+      "Sector": "RETAIL-CATALOG & MAIL-ORDER HOUSES"
+    },
+    {
+      "Ticker": "PLTR",
+      "Band": "B",
+      "Leader_Score_V2": 98.88329979879276,
+      "Leverage": 1.0,
+      "Close": 162.66,
+      "ATR20": 8.05023,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "ZBRA",
+      "Band": "B",
+      "Leader_Score_V2": 98.85311871227366,
+      "Leverage": 1.0,
+      "Close": 368.83,
+      "ATR20": 14.069879999999994,
+      "Sector": "GENERAL INDUSTRIAL MACHINERY & EQUIPMENT"
+    },
+    {
+      "Ticker": "INSP",
+      "Band": "A",
+      "Leader_Score_V2": 94.93963782696176,
+      "Leverage": 2.0,
+      "Close": 64.14,
+      "ATR20": 3.0374999999999996,
+      "Sector": "SURGICAL & MEDICAL INSTRUMENTS & APPARATUS"
+    },
+    {
+      "Ticker": "WHR",
+      "Band": "A",
+      "Leader_Score_V2": 94.74849094567404,
+      "Leverage": 2.0,
+      "Close": 44.62,
+      "ATR20": 2.18979,
+      "Sector": "HOUSEHOLD APPLIANCES"
+    },
+    {
+      "Ticker": "OWL",
+      "Band": "A",
+      "Leader_Score_V2": 94.66297786720322,
+      "Leverage": 2.0,
+      "Close": 11.57,
+      "ATR20": 0.3851275000000002,
+      "Sector": "INVESTMENT ADVICE"
+    },
+    {
+      "Ticker": "MDB",
+      "Band": "A",
+      "Leader_Score_V2": 94.45171026156943,
+      "Leverage": 2.0,
+      "Close": 380.04,
+      "ATR20": 19.696474999999992,
+      "Sector": "SERVICES-PREPACKAGED SOFTWARE"
+    },
+    {
+      "Ticker": "CTSH",
+      "Band": "A",
+      "Leader_Score_V2": 93.46579476861169,
+      "Leverage": 2.0,
+      "Close": 56.13,
+      "ATR20": 2.51757,
+      "Sector": "SERVICES-COMPUTER PROGRAMMING SERVICES"
+    },
+    {
+      "Ticker": "LDOS",
+      "Band": "A",
+      "Leader_Score_V2": 93.44064386317908,
+      "Leverage": 2.0,
+      "Close": 130.6,
+      "ATR20": 4.168544999999998,
+      "Sector": "SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN"
+    },
+    {
+      "Ticker": "ALAB",
+      "Band": "A",
+      "Leader_Score_V2": 93.30482897384306,
+      "Leverage": 2.0,
+      "Close": 361.67,
+      "ATR20": 34.80698500000001,
+      "Sector": "SEMICONDUCTORS & RELATED DEVICES"
+    }
+  ]
+}
