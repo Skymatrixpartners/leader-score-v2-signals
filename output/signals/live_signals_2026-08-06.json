@@ -1,0 +1,68 @@
+{
+  "date": "2026-08-06",
+  "regime": "BULL",
+  "spy": {
+    "regime": "BULL",
+    "spy_close": 769.79,
+    "sma50": 746.37,
+    "sma200": 701.94,
+    "spy_bull": "True",
+    "spy_bear": "False"
+  },
+  "signals": [
+    {
+      "Ticker": "SN",
+      "Band": "A",
+      "Leader_Score_V2": 94.93957703927492,
+      "Leverage": 2.0,
+      "Close": 182.11,
+      "ATR20": 5.956900000000002,
+      "Sector": "HOUSEHOLD APPLIANCES"
+    },
+    {
+      "Ticker": "W",
+      "Band": "A",
+      "Leader_Score_V2": 94.13897280966768,
+      "Leverage": 2.0,
+      "Close": 107.57,
+      "ATR20": 6.275604999999996,
+      "Sector": "RETAIL-CATALOG & MAIL-ORDER HOUSES"
+    },
+    {
+      "Ticker": "IT",
+      "Band": "A",
+      "Leader_Score_V2": 93.68580060422961,
+      "Leverage": 2.0,
+      "Close": 186.41,
+      "ATR20": 9.650474999999998,
+      "Sector": "SERVICES-MANAGEMENT SERVICES"
+    },
+    {
+      "Ticker": "AXON",
+      "Band": "A",
+      "Leader_Score_V2": 93.00604229607251,
+      "Leverage": 2.0,
+      "Close": 609.49,
+      "ATR20": 28.28101775,
+      "Sector": "Technology"
+    },
+    {
+      "Ticker": "U",
+      "Band": "A",
+      "Leader_Score_V2": 92.50251762336353,
+      "Leverage": 2.0,
+      "Close": 35.47,
+      "ATR20": 1.847175,
+      "Sector": "Software & Services"
+    },
+    {
+      "Ticker": "ANET",
+      "Band": "A",
+      "Leader_Score_V2": 92.22054380664652,
+      "Leverage": 2.0,
+      "Close": 197.31,
+      "ATR20": 10.854004999999997,
+      "Sector": "COMPUTER COMMUNICATIONS EQUIPMENT"
+    }
+  ]
+}
